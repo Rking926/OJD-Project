@@ -1,0 +1,3278 @@
+[
+ {
+  "cat": "Reconnaissance",
+  "sub": "Host Information",
+  "pkg": "metagoofil",
+  "cmd": "metagoofil",
+  "desc": "Tool designed for extracting metadata of public documents"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Host Information",
+  "pkg": "spiderfoot",
+  "cmd": "spiderfoot",
+  "desc": "OSINT collection and reconnaissance tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "email2phonenumber",
+  "cmd": "email2phonenumber",
+  "desc": "OSINT tool to obtain a target's phone number by having their email address"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "emailharvester",
+  "cmd": "emailharvester",
+  "desc": "Email addresses harvester"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "instaloader",
+  "cmd": "instaloader",
+  "desc": "Instagram automatic photo downloader"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "linkedin2username",
+  "cmd": "linkedin2username",
+  "desc": "Generate username lists for companies on LinkedIn"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "photon",
+  "cmd": "photon",
+  "desc": "Incredibly fast crawler designed for open source intelligence"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "sherlock",
+  "cmd": "sherlock",
+  "desc": "Find usernames across social networks"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Identity Information",
+  "pkg": "tookie-osint",
+  "cmd": "tookie-osint",
+  "desc": "OSINT information gathering tool for finding social media accounts"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "amass",
+  "cmd": "amass",
+  "desc": "In-depth DNS Enumeration and Network Mapping"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "autorecon",
+  "cmd": "autorecon",
+  "desc": "Multi-threaded network reconnaissance tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "dmitry",
+  "cmd": "dmitry",
+  "desc": "Deepmagic Information Gathering Tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "legion",
+  "cmd": "legion",
+  "desc": "semi-automated network penetration testing tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "nmap",
+  "cmd": "nmap",
+  "desc": "The Network Mapper"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "theharvester",
+  "cmd": "theHarvester",
+  "desc": "tool for gathering e-mail accounts and subdomain names from public sources"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information",
+  "pkg": "unicornscan",
+  "cmd": "unicornscan",
+  "desc": "Userland distributed TCP/IP stack"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information: DNS",
+  "pkg": "dnsmap",
+  "cmd": "dnsmap",
+  "desc": "DNS domain name brute forcing tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information: DNS",
+  "pkg": "dnsrecon",
+  "cmd": "dnsrecon",
+  "desc": "Powerful DNS enumeration script"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information: DNS",
+  "pkg": "dnsenum",
+  "cmd": "dnsenum",
+  "desc": "tool to enumerate domain DNS information"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information: DNS",
+  "pkg": "massdns",
+  "cmd": "massdns",
+  "desc": "high-performance DNS stub resolver"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information: DNS",
+  "pkg": "dnstracer",
+  "cmd": "dnstracer",
+  "desc": "trace DNS queries to the source"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Network Information: DNS",
+  "pkg": "dnswalk",
+  "cmd": "dnswalk",
+  "desc": "Checks dns zone information using nameserver lookups"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "assetfinder",
+  "cmd": "assetfinder",
+  "desc": "Find domains and subdomains related to a given domain"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "arjun",
+  "cmd": "arjun",
+  "desc": "HTTP parameter discovery suite"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "dirb",
+  "cmd": "dirb",
+  "desc": "URL bruteforcing tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "dirbuster",
+  "cmd": "dirbuster",
+  "desc": "Web server directory brute-forcer"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "dirsearch",
+  "cmd": "dirsearch",
+  "desc": "Web path scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "feroxbuster",
+  "cmd": "feroxbuster",
+  "desc": "fast, simple, recursive content discovery tool written in Rust"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "ffuf",
+  "cmd": "ffuf",
+  "desc": "Fast web fuzzer written in Go (program)"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "finalrecon",
+  "cmd": "finalrecon",
+  "desc": "fast and simple Python script for web reconnaissance"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "findomain",
+  "cmd": "findomain",
+  "desc": "Fastest and most complete solution for domain recognition"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "gobuster",
+  "cmd": "gobuster",
+  "desc": "high-performance discovery tool for directories, DNS and cloud storage"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "gospider",
+  "cmd": "gospider",
+  "desc": "Fast web spider written in Go"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "lbd",
+  "cmd": "lbd",
+  "desc": "Load balancer detector"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "parsero",
+  "cmd": "parsero",
+  "desc": "Robots.txt audit tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "recon-ng",
+  "cmd": "recon-ng",
+  "desc": "Web Reconnaissance framework written in Python"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "subfinder",
+  "cmd": "subfinder",
+  "desc": "subdomain discovery tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "sublist3r",
+  "cmd": "sublist3r",
+  "desc": "Fast subdomains enumeration tool for penetration testers"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "uniscan",
+  "cmd": "uniscan-gui",
+  "desc": "LFI, RFI, and RCE vulnerability scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "urlcrazy",
+  "cmd": "urlcrazy",
+  "desc": "Domain typo generator"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "uro",
+  "cmd": "uro",
+  "desc": "Declutter URLs for crawling/pentesting"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "wfuzz",
+  "cmd": "wfuzz",
+  "desc": "Web application bruteforcer"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Scanning",
+  "pkg": "wpprobe",
+  "cmd": "wpprobe",
+  "desc": "Fast WordPress plugin enumeration tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Vulnerability Scanning",
+  "pkg": "cisco-auditing-tool",
+  "cmd": "CAT",
+  "desc": "Scans Cisco routers for vulnerabilities"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Vulnerability Scanning",
+  "pkg": "gvm",
+  "cmd": "gvm-start",
+  "desc": "remote network security auditor - metapackage and useful scripts"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Vulnerability Scanning",
+  "pkg": "heartleech",
+  "cmd": "heartleech",
+  "desc": "Scanner detecting systems vulnerable to the heartbleed OpenSSL bug"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Vulnerability Scanning",
+  "pkg": "owasp-mantra-ff",
+  "cmd": "owasp-mantra-ff",
+  "desc": "Web application security testing framework built on top of Firefox"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "burpsuite",
+  "cmd": "burpsuite",
+  "desc": "platform for security testing of web applications"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "caido",
+  "cmd": "caido",
+  "desc": "security auditing toolkit (desktop)"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "caido-cli",
+  "cmd": "caido-cli",
+  "desc": "security auditing toolkit (CLI)"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "crlfuzz",
+  "cmd": "crlfuzz",
+  "desc": "Fast tool to scan CRLF vulnerability written in Go"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "davtest",
+  "cmd": "davtest",
+  "desc": "Testing tool for WebDAV servers"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "joomscan",
+  "cmd": "joomscan",
+  "desc": "OWASP Joomla Vulnerability Scanner Project"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "nikto",
+  "cmd": "nikto",
+  "desc": "web server security scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "nuclei",
+  "cmd": "nuclei",
+  "desc": "Fast and customizable vulnerability scanner based on simple YAML based DSL"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "paros",
+  "cmd": "paros",
+  "desc": "Web application proxy"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "skipfish",
+  "cmd": "skipfish",
+  "desc": "fully automated, active web application security reconnaissance tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "sstimap",
+  "cmd": "sstimap",
+  "desc": "Automatic SSTI detection tool with interactive interface"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "subjack",
+  "cmd": "subjack",
+  "desc": "Subdomain Takeover tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "tinja",
+  "cmd": "tinja",
+  "desc": "CLI tool for testing web pages for template injection"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "wapiti",
+  "cmd": "wapiti",
+  "desc": "web application vulnerability scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "watobo",
+  "cmd": "watobo",
+  "desc": "Semi-automated web application scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "web-cache-vulnerability-scanner",
+  "cmd": "wcvs",
+  "desc": "Go-based CLI tool for testing for web cache poisoning"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "webscarab",
+  "cmd": "webscarab",
+  "desc": "Web application review tool"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "whatweb",
+  "cmd": "whatweb",
+  "desc": "Next generation web scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "wpscan",
+  "cmd": "wpscan",
+  "desc": "Black box WordPress vulnerability scanner"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Web Vulnerability Scanning",
+  "pkg": "zaproxy",
+  "cmd": "zaproxy",
+  "desc": "Testing tool for finding vulnerabilities in web applications"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "bettercap",
+  "cmd": "bettercap",
+  "desc": "Complete, modular, portable and easily extensible MITM framework"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "bluelog",
+  "cmd": "bluelog",
+  "desc": "Bluetooth scanner and logger"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "bluesnarfer",
+  "cmd": "bluesnarfer",
+  "desc": "Bluesnarfing utility"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "btscanner",
+  "cmd": "btscanner",
+  "desc": "ncurses-based scanner for Bluetooth devices"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "blueranger",
+  "cmd": "blueranger",
+  "desc": "Simple Bash script to locate Bluetooth devices"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "redfang",
+  "cmd": "fang",
+  "desc": "Locates non-discoverable bluetooth devices"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "spooftooph",
+  "cmd": "spooftooph",
+  "desc": "Automates spoofing or cloning Bluetooth devices"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Bluetooth",
+  "pkg": "ubertooth",
+  "cmd": "ubertooth-util",
+  "desc": "2.4 GHz wireless development platform for Bluetooth experimentation"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "WiFi",
+  "pkg": "asleap",
+  "cmd": "asleap",
+  "desc": "A tool for exploiting Cisco LEAP networks"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "WiFi",
+  "pkg": "kismet",
+  "cmd": "kismet",
+  "desc": "wireless network and device detector (metapackage)"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "WiFi",
+  "pkg": "sparrow-wifi",
+  "cmd": "sparrow-wifi",
+  "desc": "Graphical Wi-Fi Analyzer for Linux"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "WiFi",
+  "pkg": "reaver",
+  "cmd": "wash",
+  "desc": "brute force attack tool against Wi-Fi Protected Setup PIN number"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Radio Frequency",
+  "pkg": "hackrf",
+  "cmd": "hackrf_info",
+  "desc": "Software defined radio peripheral - utilities"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Radio Frequency",
+  "pkg": "gnuradio",
+  "cmd": "gnuradio",
+  "desc": "GNU Radio Software Radio Toolkit"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Radio Frequency",
+  "pkg": "gqrx-sdr",
+  "cmd": "gqrx",
+  "desc": "Software defined radio receiver"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Radio Frequency",
+  "pkg": "chirp",
+  "cmd": "chirp",
+  "desc": "Configuration tool for amateur radios"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Radio Frequency",
+  "pkg": "rfcat",
+  "cmd": "rfcat",
+  "desc": "Swiss army knife of sub-GHz radio"
+ },
+ {
+  "cat": "Reconnaissance",
+  "sub": "Radio Frequency",
+  "pkg": "maltego",
+  "cmd": "maltego",
+  "desc": "Open source intelligence and forensics application"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "code-oss",
+  "cmd": "code-oss",
+  "desc": "Open Source package of vscode"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "donut-shellcode",
+  "cmd": "donut",
+  "desc": "Generates position-independent shellcode from memory and runs them"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "sickle-pdk",
+  "cmd": "sickle-pdk",
+  "desc": "Payload development kit"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "msitools",
+  "cmd": "wixl",
+  "desc": "Windows Installer file manipulation tool"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "wmi",
+  "cmd": "wmic",
+  "desc": ""
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "pyinstaller",
+  "cmd": "pyinstaller",
+  "desc": "Utility to bundle a Python application into a single package"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "oletools",
+  "cmd": "olevba",
+  "desc": "analyze MS OLE2 files and MS Office documents"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "aflplusplus",
+  "cmd": "afl-fuzz",
+  "desc": ""
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "bed",
+  "cmd": "bed",
+  "desc": "A network protocol fuzzer"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "spike",
+  "cmd": "generic_chunked",
+  "desc": "Network protocol fuzzer"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "sfuzz",
+  "cmd": "sfuzz",
+  "desc": "Black Box testing utilities"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "metasploit-framework",
+  "cmd": "msf-nasm_shell",
+  "desc": "Framework for exploit development and vulnerability research"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "msfpc",
+  "cmd": "msfpc",
+  "desc": "MSFvenom Payload Creator (MSFPC)"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "shellnoob",
+  "cmd": "shellnoob",
+  "desc": "Shellcode writing toolkit"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "llvm-defaults",
+  "cmd": "clang",
+  "desc": "C, C++ and Objective-C compiler (LLVM based), clang binary"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "edb-debugger",
+  "cmd": "edb",
+  "desc": "cross platform x86/x86-64 debugger"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "ollydbg",
+  "cmd": "ollydbg",
+  "desc": "32-bit assembler level analysing debugger"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "gef",
+  "cmd": "gef",
+  "desc": "modern experience for GDB with advanced debugging capabilities"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "gdb",
+  "cmd": "gdb",
+  "desc": "GNU Debugger"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "capstone",
+  "cmd": "cstool",
+  "desc": ""
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "ghidra",
+  "cmd": "ghidra",
+  "desc": "Software Reverse Engineering Framework"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "radare2",
+  "cmd": "radare2",
+  "desc": "free and advanced command line hexadecimal editor"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "rizin",
+  "cmd": "rizin",
+  "desc": "reverse engineering framework and command-line toolset"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "rizin-cutter",
+  "cmd": "cutter",
+  "desc": "reverse engineering platform powered by rizin"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "apktool",
+  "cmd": "apktool",
+  "desc": "tool for reverse engineering Android apk files"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "bytecode-viewer",
+  "cmd": "bytecode-viewer",
+  "desc": "Java 8+ Jar & Android APK Reverse Engineering Suite"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "jadx",
+  "cmd": "jadx-gui",
+  "desc": "Dex to Java decompiler"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "javasnoop",
+  "cmd": "javasnoop",
+  "desc": "Intercept Java applications locally"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "jd-gui",
+  "cmd": "jd-gui",
+  "desc": "GUI Java .class decompiler"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "dex2jar",
+  "cmd": "d2j-dex2jar",
+  "desc": "Tools to work with android .dex and java .class files"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "pompem",
+  "cmd": "pompem",
+  "desc": "Exploit and Vulnerability Finder"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "exploitdb",
+  "cmd": "searchsploit",
+  "desc": "Searchable Exploit Database archive"
+ },
+ {
+  "cat": "Resource Development",
+  "sub": "Radio Frequency",
+  "pkg": "exploitdb-papers",
+  "cmd": "exploitdb-papers",
+  "desc": "The Exploit Database's archive of papers & ezines"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "rebind",
+  "cmd": "dns-rebind",
+  "desc": "DNS rebinding tool"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "gophish",
+  "cmd": "gophish-start",
+  "desc": "Open-Source Phishing Toolkit"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "set",
+  "cmd": "setoolkit",
+  "desc": "Social-Engineer Toolkit"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "metasploit-framework",
+  "cmd": "metasploit-framework",
+  "desc": "Framework for exploit development and vulnerability research"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "sqlmap",
+  "cmd": "sqlmap",
+  "desc": "automatic SQL injection tool"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "sqlninja",
+  "cmd": "sqlninja",
+  "desc": "SQL server injection and takeover tool"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "sqlsus",
+  "cmd": "sqlsus",
+  "desc": "MySQL injection tool"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "jsql",
+  "cmd": "jsql",
+  "desc": ""
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "commix",
+  "cmd": "commix",
+  "desc": "Automated All-in-One OS Command Injection and Exploitation Tool"
+ },
+ {
+  "cat": "Initial Access",
+  "sub": "Radio Frequency",
+  "pkg": "jboss-autopwn",
+  "cmd": "jboss-linux",
+  "desc": "JBoss script for obtaining remote shell access"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "armitage",
+  "cmd": "armitage",
+  "desc": "Cyber attack management for Metasploit"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "metasploit-framework",
+  "cmd": "metasploit-framework",
+  "desc": "Framework for exploit development and vulnerability research"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "isr-evilgrade",
+  "cmd": "evilgrade",
+  "desc": "Evilgrade framework"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "beef-xss",
+  "cmd": "beef-xss-start",
+  "desc": "Browser Exploitation Framework (BeEF)"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "xsser",
+  "cmd": "xsser",
+  "desc": "XSS testing framework"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "nishang",
+  "cmd": "nishang",
+  "desc": "Collection of PowerShell scripts and payloads"
+ },
+ {
+  "cat": "Execution",
+  "sub": "Radio Frequency",
+  "pkg": "powersploit",
+  "cmd": "powersploit",
+  "desc": "PowerShell Post-Exploitation Framework"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "laudanum",
+  "cmd": "laudanum",
+  "desc": "Collection of injectable web files"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "phpggc",
+  "cmd": "phpggc",
+  "desc": "Generate payloads that exploit unsafe object deserialization"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "seclists",
+  "cmd": "seclists",
+  "desc": "Collection of multiple types of security lists"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "webacoo",
+  "cmd": "webacoo",
+  "desc": "Web backdoor cookie script kit"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "webshells",
+  "cmd": "webshells",
+  "desc": "Collection of webshells"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "weevely",
+  "cmd": "weevely",
+  "desc": "Stealth tiny web shell"
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "backdoor-factory",
+  "cmd": "backdoor-factory",
+  "desc": ""
+ },
+ {
+  "cat": "Persistence",
+  "sub": "Radio Frequency",
+  "pkg": "cymothoa",
+  "cmd": "cymothoa",
+  "desc": "Stealth backdooring tool"
+ },
+ {
+  "cat": "Privilege Escalation",
+  "sub": "Radio Frequency",
+  "pkg": "lynis",
+  "cmd": "lynis",
+  "desc": "security auditing tool for Unix based systems"
+ },
+ {
+  "cat": "Privilege Escalation",
+  "sub": "Radio Frequency",
+  "pkg": "metasploit-framework",
+  "cmd": "metasploit-framework",
+  "desc": "Framework for exploit development and vulnerability research"
+ },
+ {
+  "cat": "Privilege Escalation",
+  "sub": "Radio Frequency",
+  "pkg": "peass-ng",
+  "cmd": "peass",
+  "desc": "Privilege Escalation Awesome Scripts SUITE"
+ },
+ {
+  "cat": "Privilege Escalation",
+  "sub": "Radio Frequency",
+  "pkg": "unix-privesc-check",
+  "cmd": "unix-privesc-check",
+  "desc": "Script to check for simple privilege escalation vectors"
+ },
+ {
+  "cat": "Privilege Escalation",
+  "sub": "Radio Frequency",
+  "pkg": "bloodyad",
+  "cmd": "bloodyad",
+  "desc": "Active Directory privilege escalation framework"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "crackmapexec",
+  "cmd": "crackmapexec",
+  "desc": "Swiss army knife for pentesting networks"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "evil-winrm",
+  "cmd": "evil-winrm",
+  "desc": "ultimate WinRM shell for hacking/pentesting"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "evil-winrm-py",
+  "cmd": "evil-winrm-py",
+  "desc": "Execute commands on remote Windows machines using WinRM"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "impacket-scripts",
+  "cmd": "impacket-scripts",
+  "desc": "Links to useful impacket scripts examples"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "mimikatz",
+  "cmd": "mimikatz",
+  "desc": "Uses admin rights on Windows to display passwords in plaintext"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "netexec",
+  "cmd": "netexec",
+  "desc": "Network Execution Tool"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "passing-the-hash",
+  "cmd": "passing-the-hash",
+  "desc": "Patched tools to use password hashes as authentication input"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "rubeus",
+  "cmd": "rubeus",
+  "desc": "Raw Kerberos interaction and abuses"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "smbmap",
+  "cmd": "smbmap",
+  "desc": "handy SMB enumeration tool"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "freerdp3",
+  "cmd": "xfreerdp3",
+  "desc": ""
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "sniffjoke",
+  "cmd": "sniffjoke",
+  "desc": "Transparent TCP connection scrambler"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "ftester",
+  "cmd": "ftest",
+  "desc": "Tool for testing firewalls and Intrusion Detection System (IDS)"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "fragrouter",
+  "cmd": "fragrouter",
+  "desc": "IDS evasion toolkit"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "macchanger",
+  "cmd": "macchanger",
+  "desc": "utility for manipulating the MAC address of network interfaces"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "outguess",
+  "cmd": "outguess",
+  "desc": ""
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "steghide",
+  "cmd": "steghide",
+  "desc": "steganography hiding tool"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "stegosuite",
+  "cmd": "stegosuite",
+  "desc": "steganography tool to hide information in image files"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "stegsnow",
+  "cmd": "stegsnow",
+  "desc": "steganography using ASCII files"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "donut-shellcode",
+  "cmd": "donut",
+  "desc": "Generates position-independent shellcode from memory and runs them"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "exe2hexbat",
+  "cmd": "exe2hex",
+  "desc": "Convert EXE to bat"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "metasploit-framework",
+  "cmd": "msfvenom",
+  "desc": "Framework for exploit development and vulnerability research"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "shellter",
+  "cmd": "shellter",
+  "desc": "Dynamic shellcode injection tool and dynamic PE infector"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "veil",
+  "cmd": "veil",
+  "desc": "Generates payloads to bypass anti-virus solutions"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "ccrypt",
+  "cmd": "ccrypt",
+  "desc": "secure encryption and decryption of files and streams"
+ },
+ {
+  "cat": "Defense Evasion",
+  "sub": "Pass-the-Hash",
+  "pkg": "padbuster",
+  "cmd": "padbuster",
+  "desc": "Script for performing Padding Oracle attacks"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "OS Credential Dumping",
+  "pkg": "chntpw",
+  "cmd": "chntpw",
+  "desc": "NT SAM password recovery utility"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "OS Credential Dumping",
+  "pkg": "creddump7",
+  "cmd": "creddump7",
+  "desc": "Python tool to extract credentials and secrets from Windows registry hives"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "OS Credential Dumping",
+  "pkg": "mimikatz",
+  "cmd": "mimikatz",
+  "desc": "Uses admin rights on Windows to display passwords in plaintext"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "OS Credential Dumping",
+  "pkg": "rubeus",
+  "cmd": "rubeus",
+  "desc": "Raw Kerberos interaction and abuses"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "OS Credential Dumping",
+  "pkg": "samdump2",
+  "cmd": "samdump2",
+  "desc": "Dump Windows 2k/NT/XP password hashes"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Hash Identification",
+  "pkg": "hashid",
+  "cmd": "hashid",
+  "desc": "Identify the different types of hashes used to encrypt data"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Hash Identification",
+  "pkg": "hash-identifier",
+  "cmd": "hash-identifier",
+  "desc": "Tool to identify hash types"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "bopscrk",
+  "cmd": "bopscrk",
+  "desc": "Generate smart and powerful wordlists"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "cewl",
+  "cmd": "cewl",
+  "desc": "custom word list generator"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "crunch",
+  "cmd": "crunch",
+  "desc": "tool for creating wordlist"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "pack",
+  "cmd": "maskgen",
+  "desc": "Password analysis and cracking kit"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "rsmangler",
+  "cmd": "rsmangler",
+  "desc": "Wordlist mangling tool"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "seclists",
+  "cmd": "seclists",
+  "desc": "Collection of multiple types of security lists"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "twofi",
+  "cmd": "twofi",
+  "desc": "Twitter words of interest"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Profiling & Wordlists",
+  "pkg": "wordlists",
+  "cmd": "wordlists",
+  "desc": "Contains the rockyou wordlist"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "cisco-auditing-tool",
+  "cmd": "CAT",
+  "desc": "Scans Cisco routers for vulnerabilities"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "crackmapexec",
+  "cmd": "crackmapexec",
+  "desc": "Swiss army knife for pentesting networks"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "crowbar",
+  "cmd": "crowbar",
+  "desc": "Brute forcing tool"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "hydra",
+  "cmd": "hydra",
+  "desc": "very fast network logon cracker"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "legba",
+  "cmd": "legba",
+  "desc": "Multiprotocol credentials bruteforcer / password sprayer and enumerator"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "medusa",
+  "cmd": "medusa",
+  "desc": "fast, parallel, modular, login brute-forcer for network services"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "ncrack",
+  "cmd": "ncrack",
+  "desc": "High-speed network authentication cracking tool"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "netexec",
+  "cmd": "netexec",
+  "desc": "Network Execution Tool"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "patator",
+  "cmd": "patator",
+  "desc": "Multi-purpose brute-forcer"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "sqldict",
+  "cmd": "sqldict",
+  "desc": "Dictionary attack tool for SQL Server"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Brute Force",
+  "pkg": "thc-pptp-bruter",
+  "cmd": "thc-pptp-bruter",
+  "desc": "THC PPTP Brute Force"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "cmospwd",
+  "cmd": "cmospwd",
+  "desc": "decrypt BIOS passwords from CMOS"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "crackle",
+  "cmd": "crackle",
+  "desc": "Crack and decrypt BLE encryption"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "fcrackzip",
+  "cmd": "fcrackzip",
+  "desc": "password cracker for zip archives"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "hashcat",
+  "cmd": "hashcat",
+  "desc": "World's fastest and most advanced password recovery utility"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "john",
+  "cmd": "john",
+  "desc": "active password cracking tool"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "johnny",
+  "cmd": "johnny",
+  "desc": "GUI for John the Ripper"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "ophcrack",
+  "cmd": "ophcrack",
+  "desc": "Microsoft Windows password cracker using rainbow tables (gui)"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "rainbowcrack",
+  "cmd": "rcrack",
+  "desc": "Rainbow table password cracker"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "rcracki-mt",
+  "cmd": "rcracki_mt",
+  "desc": "Version of rcrack that supports hybrid and indexed tables"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "sipcrack",
+  "cmd": "sipcrack",
+  "desc": "SIP login dumper/cracker"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "sucrack",
+  "cmd": "sucrack",
+  "desc": "multithreaded su bruteforcer"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Password Cracking",
+  "pkg": "truecrack",
+  "cmd": "truecrack",
+  "desc": "Bruteforce password cracker for TrueCrypt volumes"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Unsecured Credentials",
+  "pkg": "gitxray",
+  "cmd": "gitxray",
+  "desc": "Scan GitHub repositories and contributors to collect data"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Unsecured Credentials",
+  "pkg": "trufflehog",
+  "cmd": "trufflehog",
+  "desc": "Searches through git repositories for secrets"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "aircrack-ng",
+  "cmd": "aircrack-ng",
+  "desc": "wireless WEP/WPA cracking utilities"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "airgeddon",
+  "cmd": "airgeddon",
+  "desc": "multi-use bash script for Linux systems to audit wireless networks"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "bully",
+  "cmd": "bully",
+  "desc": "Implementation of the WPS brute force attack, written in C"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "cowpatty",
+  "cmd": "cowpatty",
+  "desc": "Brute-force WPA dictionary attack"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "eapmd5pass",
+  "cmd": "eapmd5pass",
+  "desc": "Tool for extracting and cracking EAP-MD5"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "fern-wifi-cracker",
+  "cmd": "fern-wifi-cracker",
+  "desc": "Automated Wi-Fi cracker"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "freeradius",
+  "cmd": "freeradius",
+  "desc": "high-performance and highly configurable RADIUS server"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "pixiewps",
+  "cmd": "pixiewps",
+  "desc": "Offline WPS bruteforce tool"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "reaver",
+  "cmd": "reaver",
+  "desc": "brute force attack tool against Wi-Fi Protected Setup PIN number"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "wifi-honey",
+  "cmd": "wifi-honey",
+  "desc": "Wi-Fi honeypot"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "wifiphisher",
+  "cmd": "wifiphisher",
+  "desc": "Automated phishing attacks against Wi-Fi networks"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "WiFi Credential Access",
+  "pkg": "wifite",
+  "cmd": "wifite",
+  "desc": "Python script to automate wireless auditing using aircrack-ng tools"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Keylogger",
+  "pkg": "xspy",
+  "cmd": "xspy",
+  "desc": "X server sniffer"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "VoIP Credential Access",
+  "pkg": "sipvicious",
+  "cmd": "svcrack",
+  "desc": "tools to audit SIP based VoIP systems"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "VoIP Credential Access",
+  "pkg": "enumiax",
+  "cmd": "enumiax",
+  "desc": "IAX protocol username enumerator"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "NFC",
+  "pkg": "mfcuk",
+  "cmd": "mfcuk",
+  "desc": "MiFare Classic Universal toolKit"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "NFC",
+  "pkg": "mfoc",
+  "cmd": "mfoc",
+  "desc": "MIFARE Classic offline cracker"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "NFC",
+  "pkg": "mfterm",
+  "cmd": "mfterm",
+  "desc": "Terminal for working with Mifare Classic 1-4k Tags"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "NFC",
+  "pkg": "libfreefare",
+  "cmd": "mifare-classic-format",
+  "desc": ""
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "NFC",
+  "pkg": "libnfc",
+  "cmd": "nfc-list",
+  "desc": ""
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Kerberoasting",
+  "pkg": "kerberoast",
+  "cmd": "kerberoast",
+  "desc": "tools for attacking MS Kerberos implementations"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Kerberoasting",
+  "pkg": "krbrelayx",
+  "cmd": "krbrelayx",
+  "desc": "Kerberos relaying and unconstrained delegation abuse toolkit"
+ },
+ {
+  "cat": "Credential Access",
+  "sub": "Kerberoasting",
+  "pkg": "responder",
+  "cmd": "responder",
+  "desc": "LLMNR/NBT-NS/mDNS Poisoner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "amass",
+  "cmd": "amass",
+  "desc": "In-depth DNS Enumeration and Network Mapping"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "autorecon",
+  "cmd": "autorecon",
+  "desc": "Multi-threaded network reconnaissance tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "masscan",
+  "cmd": "masscan",
+  "desc": "TCP port scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "nmap",
+  "cmd": "nmap",
+  "desc": "The Network Mapper"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "sctpscan",
+  "cmd": "sctpscan",
+  "desc": "SCTP network scanner for discovery and security"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "unicornscan",
+  "cmd": "unicornscan",
+  "desc": "Userland distributed TCP/IP stack"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Service Discovery",
+  "pkg": "ike-scan",
+  "cmd": "ike-scan",
+  "desc": "discover and fingerprint IKE hosts (IPsec VPN Servers)"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SSL / TLS",
+  "pkg": "sslscan",
+  "cmd": "sslscan",
+  "desc": "Tests SSL/TLS enabled services to discover supported cipher suites"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SSL / TLS",
+  "pkg": "sslyze",
+  "cmd": "sslyze",
+  "desc": "Fast and full-featured SSL scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SSL / TLS",
+  "pkg": "tlssled",
+  "cmd": "tlssled",
+  "desc": "Evaluates the security of a target SSL/TLS (HTTPS) server"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SNMP",
+  "pkg": "snmpcheck",
+  "cmd": "snmp-check",
+  "desc": "SNMP service enumeration tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SNMP",
+  "pkg": "braa",
+  "cmd": "braa",
+  "desc": "Mass SNMP scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SNMP",
+  "pkg": "onesixtyone",
+  "cmd": "onesixtyone",
+  "desc": "fast and simple SNMP scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "above",
+  "cmd": "above",
+  "desc": "Network security sniffer for finding vulnerabilities in the network"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "dsniff",
+  "cmd": "arpspoof",
+  "desc": "Various tools to sniff network traffic for cleartext insecurities"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "darkstat",
+  "cmd": "darkstat",
+  "desc": "network traffic analyzer"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "dnschef",
+  "cmd": "dnschef",
+  "desc": "DNS proxy for penetration testers"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "driftnet",
+  "cmd": "driftnet",
+  "desc": "picks out and displays images from network traffic"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "hexinject",
+  "cmd": "hexinject",
+  "desc": "Versatile packet injector and sniffer"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "netsniff-ng",
+  "cmd": "netsniff-ng",
+  "desc": "Linux network packet sniffer toolkit"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "wireshark",
+  "cmd": "wireshark",
+  "desc": "network traffic analyzer - graphical interface"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "scapy",
+  "cmd": "scapy",
+  "desc": ""
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "tcpdump",
+  "cmd": "tcpdump",
+  "desc": "command-line network traffic analyzer"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Sniffing",
+  "pkg": "tcpflow",
+  "cmd": "tcpflow",
+  "desc": "TCP flow recorder"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "arping",
+  "cmd": "arping",
+  "desc": "sends IP and/or ARP pings (to the MAC address)"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "arpwatch",
+  "cmd": "arpwatch",
+  "desc": "Ethernet/FDDI station activity monitor"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "thc-ipv6",
+  "cmd": "atk6-thcping6",
+  "desc": "The Hacker Choice's IPv6 Attack Toolkit"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "fierce",
+  "cmd": "fierce",
+  "desc": "Domain DNS scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "fping",
+  "cmd": "fping",
+  "desc": "sends ICMP ECHO_REQUEST packets to network hosts"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "hping3",
+  "cmd": "hping3",
+  "desc": "Active Network Smashing Tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Remote System Discovery",
+  "pkg": "p0f",
+  "cmd": "p0f",
+  "desc": "Passive OS fingerprinting tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Account Discovery",
+  "pkg": "apache-users",
+  "cmd": "apache-users",
+  "desc": "Enumerate usernames on systems with Apache UserDir module"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Account Discovery",
+  "pkg": "smtp-user-enum",
+  "cmd": "smtp-user-enum",
+  "desc": "Username guessing tool for the SMTP service"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "crackmapexec",
+  "cmd": "crackmapexec",
+  "desc": "Swiss army knife for pentesting networks"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "enum4linux",
+  "cmd": "enum4linux",
+  "desc": "Enumerates info from Windows and Samba systems"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "enum4linux-ng",
+  "cmd": "enum4linux-ng",
+  "desc": "Next generation version of enum4linux"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "nbtscan",
+  "cmd": "nbtscan",
+  "desc": "scan networks searching for NetBIOS information"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "netexec",
+  "cmd": "netexec",
+  "desc": "Network Execution Tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "samba",
+  "cmd": "smbclient",
+  "desc": "SMB/CIFS file, print, and login server for Unix"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Share Discovery",
+  "pkg": "smbmap",
+  "cmd": "smbmap",
+  "desc": "handy SMB enumeration tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Process Discovery",
+  "pkg": "pspy",
+  "cmd": "pspy",
+  "desc": "Monitor Linux processes without root permissions"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "0trace",
+  "cmd": "0trace.sh",
+  "desc": "traceroute tool that can run within an existing TCP connection"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "irpas",
+  "cmd": "ass",
+  "desc": "Internetwork Routing Protocol Attack Suite"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "intrace",
+  "cmd": "intrace",
+  "desc": "Traceroute-like application piggybacking on existing TCP connections"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "netdiscover",
+  "cmd": "netdiscover",
+  "desc": "active/passive network address scanner using ARP requests"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "netmask",
+  "cmd": "netmask",
+  "desc": "helps determine network masks"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "sara",
+  "cmd": "sara",
+  "desc": "RouterOS Security Inspector"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "System Network Configuration Discovery",
+  "pkg": "yersinia",
+  "cmd": "yersinia",
+  "desc": "Network vulnerabilities check software"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Security Appliances",
+  "pkg": "firewalk",
+  "cmd": "firewalk",
+  "desc": "active reconnaissance network security tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Security Appliances",
+  "pkg": "tcpreplay",
+  "cmd": "tcpreplay",
+  "desc": "Tool to replay saved tcpdump files at arbitrary speeds"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Network Security Appliances",
+  "pkg": "wafw00f",
+  "cmd": "wafw00f",
+  "desc": "identify and fingerprint Web Application Firewall products"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Databases",
+  "pkg": "impacket-scripts",
+  "cmd": "impacket-mssqlclient",
+  "desc": "Links to useful impacket scripts examples"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Databases",
+  "pkg": "mdbtools",
+  "cmd": "mdb-sql",
+  "desc": "JET / MS Access database (MDB) tools"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Databases",
+  "pkg": "oscanner",
+  "cmd": "oscanner",
+  "desc": "Oracle assessment framework"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Databases",
+  "pkg": "sidguesser",
+  "cmd": "sidguess",
+  "desc": "Guesses sids against an Oracle database"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Databases",
+  "pkg": "sqlitebrowser",
+  "cmd": "sqlitebrowser",
+  "desc": "GUI editor for SQLite databases"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Databases",
+  "pkg": "tnscmd10g",
+  "cmd": "tnscmd10g",
+  "desc": "Tool to prod the oracle tnslsnr process"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SMTP",
+  "pkg": "mxcheck",
+  "cmd": "mxcheck",
+  "desc": "Info and security scanner for e-mail servers"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "SMTP",
+  "pkg": "swaks",
+  "cmd": "swaks",
+  "desc": "SMTP command-line test tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Cisco Tools",
+  "pkg": "cisco-global-exploiter",
+  "cmd": "cge.pl",
+  "desc": "Simple and fast Cisco exploitation tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Cisco Tools",
+  "pkg": "cisco-ocs",
+  "cmd": "cisco-ocs",
+  "desc": "Mass Cisco scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Cisco Tools",
+  "pkg": "cisco-torch",
+  "cmd": "cisco-torch",
+  "desc": "Cisco device scanner"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Cisco Tools",
+  "pkg": "copy-router-config",
+  "cmd": "copy-router-config.pl",
+  "desc": "Copies Cisco configs via SNMP"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Active Directory",
+  "pkg": "azurehound",
+  "cmd": "azurehound",
+  "desc": "BloodHound data collector for Microsoft Azure (program)"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Active Directory",
+  "pkg": "bloodhound",
+  "cmd": "bloodhound",
+  "desc": "Six Degrees of Domain Admin, BloodHound CE"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Active Directory",
+  "pkg": "bloodhound.py",
+  "cmd": "bloodhound-python",
+  "desc": "ingestor for BloodHound, based on Impacket (Python 3)"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Active Directory",
+  "pkg": "bloodhound-ce-python",
+  "cmd": "bloodhound-ce-python",
+  "desc": "Python based ingestor for BloodHound CE"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Active Directory",
+  "pkg": "ldeep",
+  "cmd": "ldeep",
+  "desc": "In-depth ldap enumeration utility"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "Active Directory",
+  "pkg": "sharphound",
+  "cmd": "sharphound",
+  "desc": "C# Data Collector for BloodHound"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "protos-sip",
+  "cmd": "protos-sip",
+  "desc": "SIP test suite"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "rtpbreak",
+  "cmd": "rtpbreak",
+  "desc": "Detects, reconstructs, and analyzes RTP sessions"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "rtpinsertsound",
+  "cmd": "rtpinsertsound",
+  "desc": "Inserts audio into a specified stream"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "rtpmixsound",
+  "cmd": "rtpmixsound",
+  "desc": "Mixes pre-recorded audio in real-time"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "siparmyknife",
+  "cmd": "siparmyknife",
+  "desc": "SIP fuzzing tool"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "sipp",
+  "cmd": "sipp",
+  "desc": "Traffic generator for the SIP protocol"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "sippts",
+  "cmd": "sippts",
+  "desc": "Set of tools to audit SIP based VoIP Systems"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "sipsak",
+  "cmd": "sipsak",
+  "desc": "SIP Swiss army knife"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "sipvicious",
+  "cmd": "svcrash",
+  "desc": "tools to audit SIP based VoIP systems"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "voiphopper",
+  "cmd": "voiphopper",
+  "desc": "Runs a VLAN hop security test"
+ },
+ {
+  "cat": "Discovery",
+  "sub": "VoIP",
+  "pkg": "ohrwurm",
+  "cmd": "ohrwurm",
+  "desc": "RTP fuzzer"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "crackmapexec",
+  "cmd": "crackmapexec",
+  "desc": "Swiss army knife for pentesting networks"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "evil-winrm",
+  "cmd": "evil-winrm",
+  "desc": "ultimate WinRM shell for hacking/pentesting"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "evil-winrm-py",
+  "cmd": "evil-winrm-py",
+  "desc": "Execute commands on remote Windows machines using WinRM"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "impacket-scripts",
+  "cmd": "impacket-scripts",
+  "desc": "Links to useful impacket scripts examples"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "mimikatz",
+  "cmd": "mimikatz",
+  "desc": "Uses admin rights on Windows to display passwords in plaintext"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "netexec",
+  "cmd": "netexec",
+  "desc": "Network Execution Tool"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "passing-the-hash",
+  "cmd": "passing-the-hash",
+  "desc": "Patched tools to use password hashes as authentication input"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "rubeus",
+  "cmd": "rubeus",
+  "desc": "Raw Kerberos interaction and abuses"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "smbmap",
+  "cmd": "smbmap",
+  "desc": "handy SMB enumeration tool"
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "freerdp3",
+  "cmd": "xfreerdp3",
+  "desc": ""
+ },
+ {
+  "cat": "Lateral Movement",
+  "sub": "Pass-the-Hash",
+  "pkg": "rdesktop",
+  "cmd": "rdesktop",
+  "desc": "RDP client for Windows NT/2000 Terminal Server and Windows Servers"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "httrack",
+  "cmd": "httrack",
+  "desc": "Copy websites to your computer (Offline browser)"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "ettercap",
+  "cmd": "ettercap-text-only",
+  "desc": "Ettercap console-mode executable"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "evilginx2",
+  "cmd": "evilginx2",
+  "desc": "man-in-the-middle attack framework"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "fiked",
+  "cmd": "fiked",
+  "desc": "Cisco VPN attack tool"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "fluxion",
+  "cmd": "fluxion",
+  "desc": "security auditing and social-engineering research tool"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "mitmproxy",
+  "cmd": "mitmproxy",
+  "desc": "SSL-capable man-in-the-middle HTTP proxy"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "mitm6",
+  "cmd": "mitm6",
+  "desc": "pwning IPv4 via IPv6"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "ssldump",
+  "cmd": "ssldump",
+  "desc": "SSLv3/TLS network protocol analyzer"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "sslsplit",
+  "cmd": "sslsplit",
+  "desc": "transparent and scalable SSL/TLS interception"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "sslsniff",
+  "cmd": "sslsniff",
+  "desc": "SSL/TLS man-in-the-middle attack tool"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "wifipumpkin3",
+  "cmd": "wifipumpkin3",
+  "desc": "Powerful framework for rogue access point attack"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "ferret-sidejack",
+  "cmd": "ferret-sidejack",
+  "desc": "Monitors data and extracts interesting data"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "hamster-sidejack",
+  "cmd": "hamster-sidejack",
+  "desc": "Sidejacking tool"
+ },
+ {
+  "cat": "Collection",
+  "sub": "Pass-the-Hash",
+  "pkg": "copy-router-config",
+  "cmd": "copy-router-config.pl",
+  "desc": "Copies Cisco configs via SNMP"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "cadaver",
+  "cmd": "cadaver",
+  "desc": "command-line WebDAV client"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "crackmapexec",
+  "cmd": "crackmapexec",
+  "desc": "Swiss army knife for pentesting networks"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "evil-winrm",
+  "cmd": "evil-winrm",
+  "desc": "ultimate WinRM shell for hacking/pentesting"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "impacket-scripts",
+  "cmd": "impacket-scripts",
+  "desc": "Links to useful impacket scripts examples"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "minicom",
+  "cmd": "minicom",
+  "desc": "menu-driven serial communication program"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "netexec",
+  "cmd": "netexec",
+  "desc": "Network Execution Tool"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "samba",
+  "cmd": "smbclient",
+  "desc": "SMB/CIFS file, print, and login server for Unix"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Application Layer Protocol",
+  "pkg": "freerdp3",
+  "cmd": "xfreerdp3",
+  "desc": ""
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "dbd",
+  "cmd": "dbd",
+  "desc": "Netcat clone with encryption"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "nmap",
+  "cmd": "ncat",
+  "desc": "The Network Mapper"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "penelope",
+  "cmd": "penelope",
+  "desc": "advanced shell handler for penetration testing and CTFs"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "powercat",
+  "cmd": "powercat",
+  "desc": "netcat features all in powershell v2"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "sbd",
+  "cmd": "sbd",
+  "desc": "Secure backdoor for Linux and Windows"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "socat",
+  "cmd": "socat",
+  "desc": "multipurpose relay for bidirectional data transfer"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Non-Application Layer Protocol",
+  "pkg": "termineter",
+  "cmd": "termineter",
+  "desc": "Smart meter testing framework"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "chisel",
+  "cmd": "chisel",
+  "desc": "fast TCP/UDP tunnel over HTTP (program)"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "chisel-common-binaries",
+  "cmd": "chisel-common-binaries",
+  "desc": "Prebuilt binaries for chisel"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "dns2tcp",
+  "cmd": "dns2tcpc",
+  "desc": "TCP-over-DNS tunnel server and client"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "dnscat2",
+  "cmd": "dnscat",
+  "desc": "DNS tunnel (metapackage)"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "iodine",
+  "cmd": "iodine-client-start",
+  "desc": "tool for tunneling IPv4 data through a DNS server"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "ligolo-ng",
+  "cmd": "ligolo-agent",
+  "desc": "Advanced, yet simple, tunneling/pivoting tool that uses a TUN interface"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "ligolo-mp",
+  "cmd": "ligolo-mp",
+  "desc": "Multiplayer pivoting solution"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "ligolo-ng-common-binaries",
+  "cmd": "ligolo-ng-common-binaries",
+  "desc": "Prebuilt binaries for Advanced ligolo-ng"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "miredo",
+  "cmd": "miredo",
+  "desc": "Teredo IPv6 tunneling through NATs"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "proxychains-ng",
+  "cmd": "proxychains4",
+  "desc": "redirect connections through socks/http proxies (proxychains-ng)"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "proxytunnel",
+  "cmd": "proxytunnel",
+  "desc": "Help SSH and other protocols through HTTP(S) proxies"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "ptunnel",
+  "cmd": "ptunnel",
+  "desc": "Tunnel TCP connections over ICMP packets"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "pwnat",
+  "cmd": "pwnat",
+  "desc": "NAT to NAT client-server communication"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "sshuttle",
+  "cmd": "sshuttle",
+  "desc": "Transparent proxy server for VPN over SSH"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "sslh",
+  "cmd": "sslh",
+  "desc": "Applicative protocol multiplexer"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "stunnel4",
+  "cmd": "stunnel4",
+  "desc": "Universal SSL tunnnel for network daemons - compatibility package"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "udptunnel",
+  "cmd": "udptunnel",
+  "desc": "tunnel UDP packets over a TCP connection"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "adaptixc2",
+  "cmd": "adaptixclient",
+  "desc": "extensible post-exploitation and adversarial emulation framework"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "armitage",
+  "cmd": "armitage",
+  "desc": "Cyber attack management for Metasploit"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "havoc",
+  "cmd": "havoc",
+  "desc": "Modern and malleable post-exploitation C2 framework"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "hoaxshell",
+  "cmd": "hoaxshell",
+  "desc": "Windows reverse shell payload generator and handler that abuses http(s)"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "koadic",
+  "cmd": "koadic",
+  "desc": "Windows post-exploitation rootkit"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "metasploit-framework",
+  "cmd": "metasploit-framework",
+  "desc": "Framework for exploit development and vulnerability research"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "powershell-empire",
+  "cmd": "powershell-empire",
+  "desc": "PowerShell and Python post-exploitation agent"
+ },
+ {
+  "cat": "Command and Control",
+  "sub": "Protocol Tunneling",
+  "pkg": "villain",
+  "cmd": "villain",
+  "desc": "High level C2 framework"
+ },
+ {
+  "cat": "Exfiltration",
+  "sub": "Protocol Tunneling",
+  "pkg": "impacket-scripts",
+  "cmd": "impacket-smbserver",
+  "desc": "Links to useful impacket scripts examples"
+ },
+ {
+  "cat": "Exfiltration",
+  "sub": "Protocol Tunneling",
+  "pkg": "goshs",
+  "cmd": "goshs",
+  "desc": "SimpleHTTPServer written in Go"
+ },
+ {
+  "cat": "Exfiltration",
+  "sub": "Protocol Tunneling",
+  "pkg": "raven",
+  "cmd": "raven",
+  "desc": "Python tool that extends the capabilities of the http.server Python module"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "dhcpig",
+  "cmd": "dhcpig",
+  "desc": "DHCP exhaustion script using scapy network library"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "goldeneye",
+  "cmd": "goldeneye",
+  "desc": "HTTP DoS test tool"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "iaxflood",
+  "cmd": "iaxflood",
+  "desc": "VoIP flooder tool"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "inviteflood",
+  "cmd": "inviteflood",
+  "desc": "SIP/SDP INVITE message flooding over UDP/IP"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "mdk3",
+  "cmd": "mdk3",
+  "desc": "Wireless attack tool for IEEE 802.11 networks"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "rtpflood",
+  "cmd": "rtpflood",
+  "desc": "Tool to flood any RTP device"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "siege",
+  "cmd": "siege",
+  "desc": "HTTP regression testing and benchmarking utility"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "slowhttptest",
+  "cmd": "slowhttptest",
+  "desc": "application layer Denial of Service attacks simulation tool"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "t50",
+  "cmd": "t50",
+  "desc": "Multi-protocol packet injector tool"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "thc-ssl-dos",
+  "cmd": "thc-ssl-dos",
+  "desc": "Stress tester for the SSL handshake"
+ },
+ {
+  "cat": "Impact",
+  "sub": "Protocol Tunneling",
+  "pkg": "scapy",
+  "cmd": "scapy",
+  "desc": ""
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "dc3dd",
+  "cmd": "dc3dd",
+  "desc": "patched version of GNU dd with forensic features"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "dcfldd",
+  "cmd": "dcfldd",
+  "desc": "enhanced version of dd for forensics and security"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "hexwalk",
+  "cmd": "hexwalk",
+  "desc": "Hex analyzer, editor and viewer"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "missidentify",
+  "cmd": "missidentify",
+  "desc": "find win32 applications"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "libpst",
+  "cmd": "readpst",
+  "desc": ""
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "reglookup",
+  "cmd": "reglookup",
+  "desc": "utility to analysis for Windows NT-based registry"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "regripper",
+  "cmd": "regripper",
+  "desc": "perform forensic analysis of registry hives"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "undbx",
+  "cmd": "undbx",
+  "desc": "tool to extract, recover and undelete e-mail messages from .dbx files"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Digital Forensics",
+  "pkg": "vinetto",
+  "cmd": "vinetto",
+  "desc": "forensics tool to examine Thumbs.db files"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "ext3grep",
+  "cmd": "ext3grep",
+  "desc": "tool to help recover deleted files on ext3 filesystems"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "ext4magic",
+  "cmd": "ext4magic",
+  "desc": "recover deleted files from ext3 or ext4 partitions"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "extundelete",
+  "cmd": "extundelete",
+  "desc": "utility to recover deleted files from ext3/ext4 partition"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "foremost",
+  "cmd": "foremost",
+  "desc": "forensic program to recover lost files"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "magicrescue",
+  "cmd": "magicrescue",
+  "desc": "recover files by looking for magic bytes"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "myrescue",
+  "cmd": "myrescue",
+  "desc": "rescue data from damaged disks"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "pasco",
+  "cmd": "pasco",
+  "desc": "Internet Explorer cache forensic analysis tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "testdisk",
+  "cmd": "photorec",
+  "desc": "Partition scanner and disk recovery tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "pev",
+  "cmd": "readpe",
+  "desc": "command-line tools to manipulate Windows PE files"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "recoverdm",
+  "cmd": "recoverdm",
+  "desc": "recover files on disks with damaged sectors"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "recoverjpeg",
+  "cmd": "recoverjpeg",
+  "desc": "recover JFIF (JPEG) pictures and MOV movies"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "rifiuti",
+  "cmd": "rifiuti",
+  "desc": "MS Windows recycle bin analysis tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "rifiuti2",
+  "cmd": "rifiuti2",
+  "desc": "replacement for rifiuti, a MS Windows recycle bin analysis tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "safecopy",
+  "cmd": "safecopy",
+  "desc": "data recovery tool for problematic or damaged media"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "scalpel",
+  "cmd": "scalpel",
+  "desc": "fast filesystem-independent file recovery"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Carving Tools",
+  "pkg": "scrounge-ntfs",
+  "cmd": "scrounge-ntfs",
+  "desc": "Data recovery program for NTFS filesystems"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Imaging Tools",
+  "pkg": "afflib",
+  "cmd": "affcat",
+  "desc": ""
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Imaging Tools",
+  "pkg": "ddrescue",
+  "cmd": "dd_rescue",
+  "desc": "data recovery and protection tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Imaging Tools",
+  "pkg": "libewf",
+  "cmd": "ewfacquire",
+  "desc": ""
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Forensic Imaging Tools",
+  "pkg": "guymager",
+  "cmd": "guymager",
+  "desc": "Forensic imaging tool based on Qt"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "PDF Forensics Tools",
+  "pkg": "pdfid",
+  "cmd": "pdfid",
+  "desc": "Scans PDF files for certain PDF keywords"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "PDF Forensics Tools",
+  "pkg": "pdf-parser",
+  "cmd": "pdf-parser",
+  "desc": "Parses PDF files to identify fundamental elements"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "autopsy",
+  "cmd": "autopsy",
+  "desc": "graphical interface to SleuthKit"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "sleuthkit",
+  "cmd": "blkcalc",
+  "desc": "tools for forensics analysis on volume and filesystem data"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "grokevt",
+  "cmd": "grokevt-addlog",
+  "desc": "scripts for reading Microsoft Windows event log files"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "binwalk",
+  "cmd": "binwalk",
+  "desc": "tool library for analyzing binary blobs and executable code"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "binwalk3",
+  "cmd": "binwalk3",
+  "desc": "tool library for analyzing binary blobs and executable code"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "bulk-extractor",
+  "cmd": "bulk_extractor",
+  "desc": "Extracts information without parsing filesystem"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "chkrootkit",
+  "cmd": "chkrootkit",
+  "desc": "rootkit detector"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "galleta",
+  "cmd": "galleta",
+  "desc": "Internet Explorer cookie forensic analysis tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "hashdeep",
+  "cmd": "hashdeep",
+  "desc": "recursively compute hashsums or piecewise hashings"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "rkhunter",
+  "cmd": "rkhunter",
+  "desc": "rootkit, backdoor, sniffer and exploit scanner"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "ssdeep",
+  "cmd": "ssdeep",
+  "desc": "recursive piecewise hashing tool"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "unhide",
+  "cmd": "unhide",
+  "desc": "forensic tool to find hidden processes and ports"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "xplico",
+  "cmd": "xplico-webui-start",
+  "desc": "Network Forensic Analysis Tool (NFAT)"
+ },
+ {
+  "cat": "Forensics",
+  "sub": "Sleuth Kit Suite",
+  "pkg": "yara",
+  "cmd": "yara",
+  "desc": "Pattern matching swiss knife for malware researchers"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "cherrytree",
+  "cmd": "cherrytree",
+  "desc": "hierarchical note taking application"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "dradis",
+  "cmd": "dradis-start",
+  "desc": "Collaboration tools for penetration testing"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "python-faraday",
+  "cmd": "faraday-start",
+  "desc": "Collaborative Penetration Test IDE"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "maltego",
+  "cmd": "maltego",
+  "desc": "Open source intelligence and forensics application"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "obsidian",
+  "cmd": "obsidian",
+  "desc": "Private and flexible writing app that adapts to the way you think"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "pipal",
+  "cmd": "pipal",
+  "desc": "Statistical analysis on password dumps"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "recordmydesktop",
+  "cmd": "recordmydesktop",
+  "desc": "Captures audio-video data of a Linux desktop session"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "redeye",
+  "cmd": "redeye-start",
+  "desc": ""
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "cutycapt",
+  "cmd": "cutycapt",
+  "desc": "utility to capture WebKit's rendering of a web page"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "eyewitness",
+  "cmd": "eyewitness",
+  "desc": "Rapid web application triage tool"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Reporting Tools",
+  "pkg": "witnessme",
+  "cmd": "witnessme",
+  "desc": "Web Inventory tool"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Laboratories",
+  "pkg": "juice-shop",
+  "cmd": "juice-shop-start",
+  "desc": "insecure web application"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "Laboratories",
+  "pkg": "dvwa",
+  "cmd": "dvwa-start",
+  "desc": "Damn Vulnerable Web Application"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "beef-xss",
+  "cmd": "beef-xss-start",
+  "desc": "Browser Exploitation Framework (BeEF)"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "defectdojo",
+  "cmd": "defectdojo-start",
+  "desc": "security orchestration and vulnerability management platform"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "gophish",
+  "cmd": "gophish-start",
+  "desc": "Open-Source Phishing Toolkit"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "gvm",
+  "cmd": "gvm-check-setup",
+  "desc": "remote network security auditor - metapackage and useful scripts"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "portspoof",
+  "cmd": "portspoof-start",
+  "desc": "enhance OS security through a set of techniques"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "powershell-empire",
+  "cmd": "starkiller-start",
+  "desc": "PowerShell and Python post-exploitation agent"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "xplico",
+  "cmd": "xplico-webui-start",
+  "desc": "Network Forensic Analysis Tool (NFAT)"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "arsenal-ng",
+  "cmd": "arsenal-ng",
+  "desc": "Go-based command library equipped with 200+ cybersecurity cheat-sheets"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "code-oss",
+  "cmd": "code-oss",
+  "desc": "Open Source package of vscode"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "gemini-cli",
+  "cmd": "gemini-cli",
+  "desc": "open-source AI agent"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "hexstrike-ai",
+  "cmd": "hexstrike_server",
+  "desc": "AI-Powered MCP Cybersecurity Automation Platform"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "kali-tweaks",
+  "cmd": "kali-tweaks",
+  "desc": "tool to adjust advanced configuration settings for Kali Linux"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "powershell",
+  "cmd": "pwsh",
+  "desc": "PowerShell is an automation and configuration management platform."
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "shell-gpt",
+  "cmd": "shell-gpt",
+  "desc": "Command-line productivity tool powered by AI large language models"
+ },
+ {
+  "cat": "Services and Other Tools",
+  "sub": "System Services",
+  "pkg": "tailscale",
+  "cmd": "tailscale",
+  "desc": "secure connectivity platform"
+ }
+]

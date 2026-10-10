@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OJD — OSINT Assistant</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel2: #1e222b; --border: #2a2f3a;
+    --text: #e6e8ec; --muted: #8b94a3; --accent: #4f8cff; --ok: #3ddc84;
+    --warn: #ffb020; --err: #ff5d5d;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); }
+  .layout { display: grid; grid-template-columns: 280px 1fr 340px; height: 100vh; }
+  .sidebar { background: var(--panel); border-right: 1px solid var(--border); padding: 16px; overflow-y: auto; }
+  .main { display: flex; flex-direction: column; padding: 16px; overflow-y: auto; }
+  .right { background: var(--panel); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; }
+  h1 { font-size: 16px; margin: 0 0 12px; }
+  h2 { font-size: 13px; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; letter-spacing: .05em; }
+  .inv-item { padding: 8px 10px; border-radius: 8px; cursor: pointer; margin-bottom: 4px; font-size: 13px; }
+  .inv-item:hover { background: var(--panel2); }
+  .inv-item.active { background: var(--accent); color: white; }
+  button { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; }
+  button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  input, textarea, select { background: var(--panel2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; font-size: 13px; width: 100%; }
+  .chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 16px; }
+  .msg { padding: 10px 12px; border-radius: 10px; max-width: 80%; font-size: 14px; white-space: pre-wrap; }
+  .msg.user { background: var(--accent); color: white; align-self: flex-end; }
+  .msg.assistant { background: var(--panel2); align-self: flex-start; border: 1px solid var(--border); }
+  .msg.tool { background: #11151c; border: 1px dashed var(--border); align-self: flex-start; font-size: 12px; color: var(--muted); }
+  .prompt-bar { display: flex; gap: 8px; align-items: flex-end; padding-top: 12px; border-top: 1px solid var(--border); }
+  .prompt-bar textarea { resize: none; height: 44px; }
+  .mic-btn { background: var(--panel2); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; font-size: 16px; }
+  .mic-btn.recording { background: var(--err); color: white; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%{opacity:1} 50%{opacity:.5} 100%{opacity:1} }
+  .entity-card { background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
+  .entity-type { color: var(--accent); font-weight: 600; text-transform: uppercase; font-size: 10px; }
+  .badge { display:inline-block; padding: 1px 6px; border-radius: 6px; font-size: 10px; margin-left:4px; }
+  .badge.ok { background: rgba(61,220,132,.15); color: var(--ok); }
+  .badge.error { background: rgba(255,93,93,.15); color: var(--err); }
+  .badge.refused { background: rgba(255,176,32,.15); color: var(--warn); }
+  .empty { color: var(--muted); font-size: 13px; text-align:center; margin-top: 40px; }
+  .field { margin-bottom: 10px; }
+  .field label { font-size: 12px; color: var(--muted); display:block; margin-bottom: 4px; }
+  #graph { width: 100%; height: 260px; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; background: var(--panel2); }
+  .top-actions { display:flex; gap:8px; margin-bottom: 12px; }
+  .legal-note { font-size: 11px; color: var(--warn); margin-top: 4px; }
+  dialog { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 20px; width: 380px; }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar">
+    <h1>🔎 OJD OSINT</h1>
+    <div class="top-actions">
+      <button onclick="openNewInvestigationDialog()" style="flex:1">+ Nouvelle enquête</button>
+    </div>
+    <button class="secondary" style="width:100%" onclick="openSettingsDialog()">⚙️ Paramètres</button>
+    <h2>Enquêtes</h2>
+    <div id="investigation-list"></div>
+    <h2>Modules disponibles</h2>
+    <div id="module-list"></div>
+  </div>
+
+  <div class="main">
+    <div id="chat-empty" class="empty">Sélectionne ou crée une enquête pour commencer.</div>
+    <div id="chat" class="chat" style="display:none"></div>
+    <div class="prompt-bar" id="prompt-bar" style="display:none">
+      <textarea id="prompt-input" placeholder="Ex: trouve les profils liés au pseudo 'johndoe42'..."></textarea>
+      <button class="mic-btn" id="mic-btn" title="Dicter (voix)">🎤</button>
+      <button id="send-btn">Envoyer</button>
+    </div>
+  </div>
+
+  <div class="right">
+    <h2>Entités trouvées</h2>
+    <div id="entities"></div>
+    <h2>Graphe de relations</h2>
+    <svg id="graph"></svg>
+    <h2>Journal d'audit</h2>
+    <div id="audit"></div>
+  </div>
+</div>
+
+<dialog id="new-inv-dialog">
+  <h2 style="margin-top:0">Nouvelle enquête</h2>
+  <div class="field"><label>Titre</label><input id="inv-title" placeholder="Ex: Vérification identité candidat" /></div>
+  <div class="field"><label>Motif de la recherche (obligatoire, traçabilité)</label>
+    <textarea id="inv-reason" placeholder="Ex: vérification pré-embauche avec consentement du candidat"></textarea>
+  </div>
+  <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px">
+    <button class="secondary" onclick="document.getElementById('new-inv-dialog').close()">Annuler</button>
+    <button onclick="createInvestigation()">Créer</button>
+  </div>
+</dialog>
+
+<dialog id="settings-dialog">
+  <h2 style="margin-top:0">Paramètres</h2>
+  <div class="field"><label>Fournisseur LLM</label>
+    <select id="cfg-provider">
+      <option value="anthropic">API Claude (Anthropic)</option>
+      <option value="ollama">Ollama (local)</option>
+    </select>
+  </div>
+  <div class="field"><label>Clé API Anthropic</label><input id="cfg-anthropic-key" type="password" placeholder="sk-ant-..." /></div>
+  <div class="field"><label>Modèle Anthropic</label><input id="cfg-anthropic-model" placeholder="claude-sonnet-4-5" /></div>
+  <div class="field"><label>Modèle Ollama</label><input id="cfg-ollama-model" placeholder="llama3.1" /></div>
+  <div class="field"><label>URL Ollama</label><input id="cfg-ollama-url" placeholder="http://localhost:11434" /></div>
+  <div class="field"><label>Instagram sessionid (pour toutatis — optionnel)</label><input id="cfg-ig-session" type="password" />
+    <div class="legal-note">⚠️ Hors CGU Instagram. À vos risques, usage légal uniquement.</div>
+  </div>
+  <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px">
+    <button class="secondary" onclick="document.getElementById('settings-dialog').close()">Fermer</button>
+    <button onclick="saveSettings()">Enregistrer</button>
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
