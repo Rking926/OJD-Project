@@ -41,6 +41,14 @@ def api_list_modules():
     return manifests()
 
 
+# ---------- Catalogue Kali ----------
+
+@app.get("/api/catalog")
+def api_catalog():
+    from .catalog_store import catalog, stats
+    return {"stats": stats(), "tools": catalog()}
+
+
 # ---------- Config ----------
 
 class ConfigIn(BaseModel):

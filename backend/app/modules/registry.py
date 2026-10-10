@@ -7,6 +7,7 @@ Ajouter un outil = créer un fichier module + l'instancier ici. Rien d'autre
 from __future__ import annotations
 
 from .base import OsintModule
+from .kali_runner import ReconToolModule
 from .sherlock_module import SherlockModule
 from .toutatis_module import ToutatisModule
 from .whois_module import WhoisModule
@@ -17,6 +18,7 @@ _MODULES: dict[str, OsintModule] = {
         SherlockModule(),
         WhoisModule(),
         ToutatisModule(),
+        ReconToolModule(),
     ]
 }
 

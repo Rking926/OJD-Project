@@ -1,13 +1,10 @@
-// Logique front minimale : vanilla JS, pas de build nécessaire.
+// OJD OSINT — logique front (vanilla JS, pas de build).
 const API = "/api";
 let currentInvestigationId = null;
-let investigations = [];
+let catalogData = null;
 
 async function api(path, opts = {}) {
-  const res = await fetch(API + path, {
-    headers: { "Content-Type": "application/json" },
-    ...opts,
-  });
+  const res = await fetch(API + path, { headers: { "Content-Type": "application/json" }, ...opts });
   if (!res.ok) {
     const body = await res.json().catch(() => ({ detail: res.statusText }));
     throw new Error(body.detail || "Erreur API");
@@ -15,16 +12,25 @@ async function api(path, opts = {}) {
   return res.json();
 }
 
+// ---------- Système / stats ----------
+
+async function loadStats() {
+  try {
+    const cat = await api("/catalog");
+    document.getElementById("sys-stats").innerHTML =
+      `${cat.stats.installed}/${cat.stats.total} outils installés<br/>${cat.stats.runnable} lançables par l'IA`;
+  } catch {
+    document.getElementById("sys-stats").textContent = "stats indisponibles";
+  }
+}
+
 // ---------- Investigations ----------
 
 async function loadInvestigations() {
-  investigations = await api("/investigations");
   const list = document.getElementById("investigation-list");
-  list.innerHTML = "";
-  if (investigations.length === 0) {
-    list.innerHTML = '<div class="empty" style="margin-top:8px">Aucune enquête encore.</div>';
-  }
-  for (const inv of investigations) {
+  const items = await api("/investigations");
+  list.innerHTML = items.length ? "" : '<div class="dim" style="font-size:11px">aucune enquête</div>';
+  for (const inv of items) {
     const div = document.createElement("div");
     div.className = "inv-item" + (inv.id === currentInvestigationId ? " active" : "");
     div.textContent = inv.title;
@@ -43,84 +49,68 @@ function openNewInvestigationDialog() {
 async function createInvestigation() {
   const title = document.getElementById("inv-title").value.trim() || "Enquête sans titre";
   const reason = document.getElementById("inv-reason").value.trim();
-  if (!reason) {
-    alert("Le motif de la recherche est obligatoire.");
-    return;
-  }
+  if (!reason) { alert("Le motif de la recherche est obligatoire."); return; }
   try {
     const inv = await api("/investigations", { method: "POST", body: JSON.stringify({ title, reason }) });
     document.getElementById("new-inv-dialog").close();
     await loadInvestigations();
     selectInvestigation(inv.id);
-  } catch (e) {
-    alert(e.message);
-  }
+  } catch (e) { alert(e.message); }
 }
 
 async function selectInvestigation(id) {
   currentInvestigationId = id;
-  document.getElementById("chat-empty").style.display = "none";
-  document.getElementById("chat").style.display = "flex";
-  document.getElementById("prompt-bar").style.display = "flex";
-  document.getElementById("chat").innerHTML = "";
+  const ta = document.getElementById("prompt-input");
+  ta.disabled = false;
+  ta.focus();
+  document.getElementById("composer-hint").textContent = "Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne";
+  document.getElementById("transcript").innerHTML = "";
   await loadInvestigations();
-  await refreshInvestigationDetail();
+  await refreshDetail();
 }
 
-async function refreshInvestigationDetail() {
+async function refreshDetail() {
   if (!currentInvestigationId) return;
-  const detail = await api(`/investigations/${currentInvestigationId}`);
-  renderEntities(detail.entities);
-  renderAudit(detail.audit);
-  renderGraph(detail.entities, detail.relations);
+  const d = await api(`/investigations/${currentInvestigationId}`);
+  renderEntities(d.entities);
+  renderAudit(d.audit);
 }
 
-// ---------- Modules ----------
+// ---------- Transcript ----------
 
-async function loadModules() {
-  const mods = await api("/modules");
-  const list = document.getElementById("module-list");
-  list.innerHTML = "";
-  for (const m of mods) {
-    const div = document.createElement("div");
-    div.className = "entity-card";
-    div.innerHTML = `<div><strong>${m.name}</strong></div><div style="color:var(--muted)">${m.description}</div>` +
-      (m.requires_config.length ? `<div class="legal-note">Nécessite config: ${m.requires_config.join(", ")}</div>` : "");
-    list.appendChild(div);
-  }
-}
-
-// ---------- Chat / prompt ----------
-
-function addChatMessage(role, text) {
-  const chat = document.getElementById("chat");
+function addTurn(role, text) {
+  const t = document.getElementById("transcript");
   const div = document.createElement("div");
-  div.className = "msg " + role;
-  div.textContent = text;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
+  div.className = "turn " + role;
+  const who = role === "user" ? "❯ vous" : role === "assistant" ? "✻ ojd" : "";
+  div.innerHTML = who ? `<span class="who">${who}</span>\n${escapeHtml(text)}` : escapeHtml(text);
+  t.appendChild(div);
+  t.scrollTop = t.scrollHeight;
   return div;
 }
 
-function addToolTrace(toolCalls) {
-  if (!toolCalls || toolCalls.length === 0) return;
-  const chat = document.getElementById("chat");
+function addToolTrace(calls) {
+  if (!calls || !calls.length) return;
+  const t = document.getElementById("transcript");
   const div = document.createElement("div");
-  div.className = "msg tool";
-  div.innerHTML = toolCalls.map(tc =>
-    `→ <strong>${tc.module}</strong>(${tc.input_type}: ${tc.value}) <span class="badge ${tc.status}">${tc.status}</span>`
-  ).join("<br/>");
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
+  div.className = "turn tool";
+  div.innerHTML = calls.map(c =>
+    `<span class="call">⚙ ${c.module}</span>(${escapeHtml(c.input_type)}: ${escapeHtml(c.value)}) <span class="${c.status}">${c.status}</span>`
+  ).join("\n");
+  t.appendChild(div);
+  t.scrollTop = t.scrollHeight;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 }
 
 async function sendPromptText(text) {
   if (!text.trim() || !currentInvestigationId) return;
-  addChatMessage("user", text);
+  addTurn("user", text);
   document.getElementById("prompt-input").value = "";
-  const sendBtn = document.getElementById("send-btn");
-  sendBtn.disabled = true;
-  const thinking = addChatMessage("assistant", "...");
+  autoGrow();
+  const thinking = addTurn("assistant", "…");
   try {
     const result = await api("/prompt", {
       method: "POST",
@@ -128,133 +118,95 @@ async function sendPromptText(text) {
     });
     thinking.remove();
     addToolTrace(result.tool_calls);
-    addChatMessage("assistant", result.reply || "(pas de réponse texte)");
-    await refreshInvestigationDetail();
+    addTurn("assistant", result.reply || "(pas de réponse)");
+    await refreshDetail();
   } catch (e) {
-    thinking.textContent = "Erreur: " + e.message;
-  } finally {
-    sendBtn.disabled = false;
+    thinking.innerHTML = `<span class="who">✻ ojd</span>\n<span class="err">Erreur : ${escapeHtml(e.message)}</span>`;
   }
 }
 
-document.getElementById("send-btn").addEventListener("click", () => {
-  sendPromptText(document.getElementById("prompt-input").value);
+// ---------- Composer ----------
+
+const ta = document.getElementById("prompt-input");
+function autoGrow() { ta.style.height = "22px"; ta.style.height = Math.min(ta.scrollHeight, 160) + "px"; }
+ta.addEventListener("input", autoGrow);
+ta.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendPromptText(ta.value); }
 });
-document.getElementById("prompt-input").addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendPromptText(document.getElementById("prompt-input").value);
-  }
-});
+document.getElementById("send-btn").addEventListener("click", () => sendPromptText(ta.value));
 
-// ---------- Commande vocale (Web Speech API du navigateur, local au navigateur) ----------
+// ---------- Voix (Web Speech API, local au navigateur) ----------
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognizer = null;
-let isRecording = false;
-
-if (SpeechRecognition) {
-  recognizer = new SpeechRecognition();
-  recognizer.lang = "fr-FR";
-  recognizer.interimResults = false;
-  recognizer.maxAlternatives = 1;
-
-  recognizer.onresult = (event) => {
-    const transcript = event.results[0][0].transcript;
-    document.getElementById("prompt-input").value = transcript;
-    sendPromptText(transcript);
-  };
-  recognizer.onend = () => {
-    isRecording = false;
-    document.getElementById("mic-btn").classList.remove("recording");
-  };
-  recognizer.onerror = () => {
-    isRecording = false;
-    document.getElementById("mic-btn").classList.remove("recording");
-  };
-} else {
-  document.getElementById("mic-btn").title = "Reconnaissance vocale non supportée par ce navigateur";
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognizer = null, recording = false;
+if (SR) {
+  recognizer = new SR();
+  recognizer.lang = "fr-FR"; recognizer.interimResults = false; recognizer.maxAlternatives = 1;
+  recognizer.onresult = (ev) => { const tr = ev.results[0][0].transcript; ta.value = tr; sendPromptText(tr); };
+  recognizer.onend = () => { recording = false; document.getElementById("mic-btn").classList.remove("recording"); };
+  recognizer.onerror = () => { recording = false; document.getElementById("mic-btn").classList.remove("recording"); };
 }
-
 document.getElementById("mic-btn").addEventListener("click", () => {
-  if (!recognizer) {
-    alert("La reconnaissance vocale n'est pas supportée par ce navigateur (essaie Chrome).");
-    return;
-  }
-  if (isRecording) {
-    recognizer.stop();
-    return;
-  }
-  isRecording = true;
-  document.getElementById("mic-btn").classList.add("recording");
-  recognizer.start();
+  if (!recognizer) { alert("Reconnaissance vocale non supportée (essaie Chrome)."); return; }
+  if (recording) { recognizer.stop(); return; }
+  recording = true; document.getElementById("mic-btn").classList.add("recording"); recognizer.start();
 });
 
-// ---------- Entités / audit / graphe ----------
+// ---------- Drawer (entités / audit) ----------
+
+function toggleDrawer() { document.getElementById("drawer").classList.toggle("open"); }
 
 function renderEntities(entities) {
-  const container = document.getElementById("entities");
-  container.innerHTML = "";
-  if (!entities || entities.length === 0) {
-    container.innerHTML = '<div class="empty">Aucune entité encore.</div>';
-    return;
-  }
-  for (const e of entities) {
+  const c = document.getElementById("entities");
+  c.innerHTML = entities && entities.length ? "" : '<div class="dim">aucune entité</div>';
+  for (const e of (entities || [])) {
     const div = document.createElement("div");
-    div.className = "entity-card";
-    div.innerHTML = `<div class="entity-type">${e.type}</div><div>${e.value}</div><div style="color:var(--muted)">via ${e.source_module}</div>`;
-    container.appendChild(div);
+    div.className = "card";
+    let extra = "";
+    if (e.extra && e.extra.output) extra = `<div class="dim" style="margin-top:4px;white-space:pre-wrap;max-height:120px;overflow:auto">${escapeHtml(e.extra.output.slice(0, 1500))}</div>`;
+    div.innerHTML = `<div class="t">${e.type}</div><div>${escapeHtml(e.value)}</div><div class="dim">via ${e.source_module}</div>${extra}`;
+    c.appendChild(div);
   }
 }
 
 function renderAudit(audit) {
-  const container = document.getElementById("audit");
-  container.innerHTML = "";
-  if (!audit || audit.length === 0) {
-    container.innerHTML = '<div class="empty">Aucun appel encore.</div>';
-    return;
-  }
-  for (const a of audit.slice().reverse()) {
+  const c = document.getElementById("audit");
+  c.innerHTML = audit && audit.length ? "" : '<div class="dim">aucun appel</div>';
+  for (const a of (audit || []).slice().reverse()) {
     const div = document.createElement("div");
-    div.className = "entity-card";
-    div.innerHTML = `<strong>${a.module}</strong> <span class="badge ${a.status}">${a.status}</span>` +
-      `<div style="color:var(--muted)">${a.input_value}</div>` +
-      `<div style="color:var(--muted); font-size:11px">${a.created_at}</div>`;
-    container.appendChild(div);
+    div.className = "card";
+    div.innerHTML = `<strong>${a.module}</strong> <span class="${a.status}">${a.status}</span><div class="dim">${escapeHtml(a.input_value)}</div><div class="dim" style="font-size:10px">${a.created_at}</div>`;
+    c.appendChild(div);
   }
 }
 
-// Graphe très simple : noeud central (l'enquête) + une entité par rayon.
-// Sera remplacé plus tard par une vraie lib de graphe / carte 3D.
-function renderGraph(entities, relations) {
-  const svg = document.getElementById("graph");
-  const w = svg.clientWidth || 300;
-  const h = 260;
-  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  svg.innerHTML = "";
-  if (!entities || entities.length === 0) return;
+// ---------- Catalogue ----------
 
-  const cx = w / 2, cy = h / 2;
-  const addEl = (tag, attrs) => {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
-    svg.appendChild(el);
-    return el;
-  };
+async function openCatalog() {
+  document.getElementById("catalog-dialog").showModal();
+  if (!catalogData) catalogData = await api("/catalog");
+  renderCatalog();
+}
 
-  addEl("circle", { cx, cy, r: 10, fill: "#4f8cff" });
-
-  const n = entities.length;
-  entities.forEach((e, i) => {
-    const angle = (2 * Math.PI * i) / n;
-    const r = Math.min(w, h) / 2 - 40;
-    const x = cx + r * Math.cos(angle);
-    const y = cy + r * Math.sin(angle);
-    addEl("line", { x1: cx, y1: cy, x2: x, y2: y, stroke: "#2a2f3a", "stroke-width": 1 });
-    addEl("circle", { cx: x, cy: y, r: 6, fill: "#3ddc84" });
-    const label = addEl("text", { x: x, y: y - 10, fill: "#e6e8ec", "font-size": 9, "text-anchor": "middle" });
-    label.textContent = e.value.length > 18 ? e.value.slice(0, 18) + "…" : e.value;
-  });
+function renderCatalog() {
+  if (!catalogData) return;
+  const q = document.getElementById("cat-search").value.toLowerCase().trim();
+  const tools = catalogData.tools.filter(t =>
+    !q || `${t.cmd} ${t.pkg} ${t.cat} ${t.sub} ${t.desc}`.toLowerCase().includes(q));
+  document.getElementById("cat-stats").textContent =
+    `${tools.length} affichés · ${catalogData.stats.installed}/${catalogData.stats.total} installés · ${catalogData.stats.runnable} lançables par l'IA`;
+  const list = document.getElementById("cat-list");
+  list.innerHTML = "";
+  for (const t of tools.slice(0, 400)) {
+    const row = document.createElement("div");
+    row.className = "tool-row";
+    const pill = t.runnable ? '<span class="pill run">IA</span>'
+      : t.installed ? '<span class="pill inst">installé</span>'
+      : '<span class="pill no">absent</span>';
+    row.innerHTML = `<div class="cmd">${escapeHtml(t.cmd)}<div class="dim" style="font-size:10px">${escapeHtml(t.cat)}</div></div>` +
+      `<div class="desc">${escapeHtml(t.desc)}</div>${pill}`;
+    list.appendChild(row);
+  }
 }
 
 // ---------- Paramètres ----------
@@ -262,11 +214,11 @@ function renderGraph(entities, relations) {
 async function openSettingsDialog() {
   const cfg = await api("/config");
   document.getElementById("cfg-provider").value = cfg.llm_provider;
-  document.getElementById("cfg-anthropic-key").value = "";
-  document.getElementById("cfg-anthropic-key").placeholder = cfg.anthropic_api_key || "sk-ant-...";
-  document.getElementById("cfg-anthropic-model").value = cfg.anthropic_model;
   document.getElementById("cfg-ollama-model").value = cfg.ollama_model;
   document.getElementById("cfg-ollama-url").value = cfg.ollama_base_url;
+  document.getElementById("cfg-anthropic-model").value = cfg.anthropic_model;
+  document.getElementById("cfg-anthropic-key").value = "";
+  document.getElementById("cfg-anthropic-key").placeholder = cfg.anthropic_api_key || "sk-ant-…";
   document.getElementById("cfg-ig-session").value = "";
   document.getElementById("cfg-ig-session").placeholder = cfg.module_config.instagram_sessionid || "";
   document.getElementById("settings-dialog").showModal();
@@ -275,25 +227,21 @@ async function openSettingsDialog() {
 async function saveSettings() {
   const body = {
     llm_provider: document.getElementById("cfg-provider").value,
-    anthropic_model: document.getElementById("cfg-anthropic-model").value,
     ollama_model: document.getElementById("cfg-ollama-model").value,
     ollama_base_url: document.getElementById("cfg-ollama-url").value,
+    anthropic_model: document.getElementById("cfg-anthropic-model").value,
     module_config: {},
   };
   const key = document.getElementById("cfg-anthropic-key").value.trim();
   if (key) body.anthropic_api_key = key;
   const ig = document.getElementById("cfg-ig-session").value.trim();
   if (ig) body.module_config.instagram_sessionid = ig;
-
   try {
     await api("/config", { method: "PUT", body: JSON.stringify(body) });
     document.getElementById("settings-dialog").close();
-  } catch (e) {
-    alert(e.message);
-  }
+  } catch (e) { alert(e.message); }
 }
 
 // ---------- Init ----------
-
 loadInvestigations();
-loadModules();
+loadStats();

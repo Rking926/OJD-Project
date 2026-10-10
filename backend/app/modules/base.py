@@ -59,6 +59,15 @@ class OsintModule(ABC):
         """Exécute la recherche et retourne un résultat normalisé."""
         raise NotImplementedError
 
+    def input_schema(self) -> dict | None:
+        """Schéma JSON des arguments exposé au LLM.
+
+        Par défaut None : l'orchestrateur construit un schéma standard
+        {input_type, value} à partir de `accepts`. Un module peut surcharger
+        cette méthode pour exposer des paramètres différents (ex: le lanceur
+        générique qui prend aussi le nom de l'outil)."""
+        return None
+
     def manifest(self) -> dict:
         return {
             "name": self.name,

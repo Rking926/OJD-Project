@@ -3,119 +3,168 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>OJD — OSINT Assistant</title>
+<title>OJD OSINT</title>
 <style>
   :root {
-    --bg: #0f1115; --panel: #171a21; --panel2: #1e222b; --border: #2a2f3a;
-    --text: #e6e8ec; --muted: #8b94a3; --accent: #4f8cff; --ok: #3ddc84;
-    --warn: #ffb020; --err: #ff5d5d;
+    --bg: #1a1816; --bg2: #211e1b; --panel: #211e1b; --border: #3a352f;
+    --text: #e8e3da; --muted: #9a9088; --accent: #d97757; --accent2: #cc785c;
+    --ok: #7fb069; --warn: #e0a458; --err: #e05c5c; --mono: "DejaVu Sans Mono", "SF Mono", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
-  body { margin:0; font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); }
-  .layout { display: grid; grid-template-columns: 280px 1fr 340px; height: 100vh; }
-  .sidebar { background: var(--panel); border-right: 1px solid var(--border); padding: 16px; overflow-y: auto; }
-  .main { display: flex; flex-direction: column; padding: 16px; overflow-y: auto; }
-  .right { background: var(--panel); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; }
-  h1 { font-size: 16px; margin: 0 0 12px; }
-  h2 { font-size: 13px; text-transform: uppercase; color: var(--muted); margin: 18px 0 8px; letter-spacing: .05em; }
-  .inv-item { padding: 8px 10px; border-radius: 8px; cursor: pointer; margin-bottom: 4px; font-size: 13px; }
-  .inv-item:hover { background: var(--panel2); }
-  .inv-item.active { background: var(--accent); color: white; }
-  button { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; font-size: 13px; }
-  button.secondary { background: var(--panel2); color: var(--text); border: 1px solid var(--border); }
-  button:disabled { opacity: .5; cursor: not-allowed; }
-  input, textarea, select { background: var(--panel2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 8px 10px; font-size: 13px; width: 100%; }
-  .chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-bottom: 16px; }
-  .msg { padding: 10px 12px; border-radius: 10px; max-width: 80%; font-size: 14px; white-space: pre-wrap; }
-  .msg.user { background: var(--accent); color: white; align-self: flex-end; }
-  .msg.assistant { background: var(--panel2); align-self: flex-start; border: 1px solid var(--border); }
-  .msg.tool { background: #11151c; border: 1px dashed var(--border); align-self: flex-start; font-size: 12px; color: var(--muted); }
-  .prompt-bar { display: flex; gap: 8px; align-items: flex-end; padding-top: 12px; border-top: 1px solid var(--border); }
-  .prompt-bar textarea { resize: none; height: 44px; }
-  .mic-btn { background: var(--panel2); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; font-size: 16px; }
-  .mic-btn.recording { background: var(--err); color: white; animation: pulse 1s infinite; }
-  @keyframes pulse { 0%{opacity:1} 50%{opacity:.5} 100%{opacity:1} }
-  .entity-card { background: var(--panel2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
-  .entity-type { color: var(--accent); font-weight: 600; text-transform: uppercase; font-size: 10px; }
-  .badge { display:inline-block; padding: 1px 6px; border-radius: 6px; font-size: 10px; margin-left:4px; }
-  .badge.ok { background: rgba(61,220,132,.15); color: var(--ok); }
-  .badge.error { background: rgba(255,93,93,.15); color: var(--err); }
-  .badge.refused { background: rgba(255,176,32,.15); color: var(--warn); }
-  .empty { color: var(--muted); font-size: 13px; text-align:center; margin-top: 40px; }
+  body { margin:0; font-family: var(--mono); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; }
+  .layout { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+
+  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 14px; overflow-y: auto; }
+  .brand { color: var(--accent); font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+  .brand .star { animation: spin 4s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .tagline { color: var(--muted); font-size: 11px; margin-bottom: 16px; }
+  .side-section { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 6px; }
+  .side-btn { display:block; width:100%; text-align:left; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; cursor: pointer; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; }
+  .side-btn:hover { border-color: var(--accent); }
+  .inv-item { padding: 6px 9px; border-radius: 6px; cursor: pointer; margin-bottom: 3px; font-size: 12px; color: var(--muted); }
+  .inv-item:hover { background: var(--bg); color: var(--text); }
+  .inv-item.active { background: var(--bg); color: var(--accent); border-left: 2px solid var(--accent); }
+  .stat-line { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  .main { display: flex; flex-direction: column; overflow: hidden; }
+  .transcript { flex: 1; overflow-y: auto; padding: 20px 28px; }
+  .welcome { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; color: var(--muted); }
+  .welcome b { color: var(--accent); }
+  .turn { margin-bottom: 14px; white-space: pre-wrap; }
+  .turn .who { color: var(--accent); }
+  .turn.user .who { color: var(--text); }
+  .turn.tool { color: var(--muted); font-size: 12px; }
+  .turn.tool .call { color: var(--warn); }
+  .ok { color: var(--ok); } .err { color: var(--err); } .refused { color: var(--warn); }
+  .dim { color: var(--muted); }
+
+  .composer { padding: 14px 28px 20px; border-top: 1px solid var(--border); }
+  .composer .box { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: flex; align-items: flex-end; gap: 8px; background: var(--bg2); }
+  .composer .box:focus-within { border-color: var(--accent); }
+  .composer .prompt-char { color: var(--accent); font-weight: 700; padding-bottom: 2px; }
+  .composer textarea { flex:1; background: transparent; border: none; color: var(--text); font-family: var(--mono); font-size: 13px; resize: none; height: 22px; max-height: 160px; outline: none; }
+  .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 2px 6px; }
+  .icon-btn:hover { color: var(--accent); }
+  .icon-btn.recording { color: var(--err); animation: pulse 1s infinite; }
+  @keyframes pulse { 50% { opacity: .4; } }
+  .hint { color: var(--muted); font-size: 11px; margin-top: 6px; }
+
+  /* Panneau latéral droit (entités/audit) en overlay compact */
+  .drawer { position: fixed; top:0; right:0; width: 360px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; transform: translateX(100%); transition: transform .2s; z-index: 50; }
+  .drawer.open { transform: translateX(0); }
+  .drawer h3 { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .1em; margin: 16px 0 8px; }
+  .card { border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
+  .card .t { color: var(--accent); font-size: 10px; text-transform: uppercase; }
+  .drawer-close { float:right; }
+
+  dialog { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 20px; width: 460px; max-width: 92vw; font-family: var(--mono); }
+  dialog::backdrop { background: rgba(0,0,0,.65); }
+  dialog h2 { font-size: 14px; margin-top: 0; color: var(--accent); }
   .field { margin-bottom: 10px; }
-  .field label { font-size: 12px; color: var(--muted); display:block; margin-bottom: 4px; }
-  #graph { width: 100%; height: 260px; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; background: var(--panel2); }
-  .top-actions { display:flex; gap:8px; margin-bottom: 12px; }
-  .legal-note { font-size: 11px; color: var(--warn); margin-top: 4px; }
-  dialog { background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 20px; width: 380px; }
-  dialog::backdrop { background: rgba(0,0,0,.6); }
+  .field label { font-size: 11px; color: var(--muted); display:block; margin-bottom: 4px; }
+  input, textarea, select { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 9px; font-size: 12px; width: 100%; font-family: var(--mono); }
+  .row-end { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+  button.primary { background: var(--accent); color: #1a1816; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--mono); font-weight: 600; }
+  button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--mono); }
+  .legal { font-size: 10px; color: var(--warn); margin-top: 4px; }
+
+  /* Catalogue */
+  #catalog-dialog { width: 760px; }
+  .cat-search { margin-bottom: 10px; }
+  .cat-stats { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
+  .cat-list { max-height: 60vh; overflow-y: auto; }
+  .tool-row { display: grid; grid-template-columns: 150px 1fr auto; gap: 10px; padding: 6px 8px; border-bottom: 1px solid var(--border); align-items: center; }
+  .tool-row .cmd { color: var(--text); }
+  .tool-row .desc { color: var(--muted); font-size: 11px; }
+  .pill { font-size: 9px; padding: 2px 6px; border-radius: 10px; white-space: nowrap; }
+  .pill.inst { background: rgba(127,176,105,.15); color: var(--ok); }
+  .pill.no { background: rgba(154,144,136,.12); color: var(--muted); }
+  .pill.run { background: rgba(217,119,87,.18); color: var(--accent); }
 </style>
 </head>
 <body>
 <div class="layout">
   <div class="sidebar">
-    <h1>🔎 OJD OSINT</h1>
-    <div class="top-actions">
-      <button onclick="openNewInvestigationDialog()" style="flex:1">+ Nouvelle enquête</button>
-    </div>
-    <button class="secondary" style="width:100%" onclick="openSettingsDialog()">⚙️ Paramètres</button>
-    <h2>Enquêtes</h2>
+    <div class="brand"><span class="star">✻</span> OJD OSINT</div>
+    <div class="tagline">assistant d'investigation</div>
+    <button class="side-btn" onclick="openNewInvestigationDialog()">+ nouvelle enquête</button>
+    <button class="side-btn" onclick="openCatalog()">▤ catalogue outils</button>
+    <button class="side-btn" onclick="toggleDrawer()">▦ résultats</button>
+    <button class="side-btn" onclick="openSettingsDialog()">⚙ paramètres</button>
+    <div class="side-section">Enquêtes</div>
     <div id="investigation-list"></div>
-    <h2>Modules disponibles</h2>
-    <div id="module-list"></div>
+    <div class="side-section">Système</div>
+    <div class="stat-line" id="sys-stats">…</div>
   </div>
 
   <div class="main">
-    <div id="chat-empty" class="empty">Sélectionne ou crée une enquête pour commencer.</div>
-    <div id="chat" class="chat" style="display:none"></div>
-    <div class="prompt-bar" id="prompt-bar" style="display:none">
-      <textarea id="prompt-input" placeholder="Ex: trouve les profils liés au pseudo 'johndoe42'..."></textarea>
-      <button class="mic-btn" id="mic-btn" title="Dicter (voix)">🎤</button>
-      <button id="send-btn">Envoyer</button>
+    <div class="transcript" id="transcript">
+      <div class="welcome">
+        <b>✻ Bienvenue sur OJD OSINT</b>
+        <div class="dim">Crée ou sélectionne une enquête, puis décris ta recherche en langage naturel.</div>
+        <div class="dim">Ex : « cherche le pseudo johndoe42 » · « reconnaissance du domaine exemple.com »</div>
+      </div>
     </div>
-  </div>
-
-  <div class="right">
-    <h2>Entités trouvées</h2>
-    <div id="entities"></div>
-    <h2>Graphe de relations</h2>
-    <svg id="graph"></svg>
-    <h2>Journal d'audit</h2>
-    <div id="audit"></div>
+    <div class="composer">
+      <div class="box">
+        <span class="prompt-char">&gt;</span>
+        <textarea id="prompt-input" placeholder="Décris ta recherche, ou dicte avec 🎤…" rows="1" disabled></textarea>
+        <button class="icon-btn" id="mic-btn" title="Dicter">🎤</button>
+        <button class="icon-btn" id="send-btn" title="Envoyer (Entrée)">⏎</button>
+      </div>
+      <div class="hint" id="composer-hint">Sélectionne une enquête pour commencer · Entrée pour envoyer, Maj+Entrée pour une nouvelle ligne</div>
+    </div>
   </div>
 </div>
 
+<div class="drawer" id="drawer">
+  <button class="icon-btn drawer-close" onclick="toggleDrawer()">✕</button>
+  <h3>Entités trouvées</h3>
+  <div id="entities"></div>
+  <h3>Journal d'audit</h3>
+  <div id="audit"></div>
+</div>
+
 <dialog id="new-inv-dialog">
-  <h2 style="margin-top:0">Nouvelle enquête</h2>
+  <h2>Nouvelle enquête</h2>
   <div class="field"><label>Titre</label><input id="inv-title" placeholder="Ex: Vérification identité candidat" /></div>
-  <div class="field"><label>Motif de la recherche (obligatoire, traçabilité)</label>
-    <textarea id="inv-reason" placeholder="Ex: vérification pré-embauche avec consentement du candidat"></textarea>
+  <div class="field"><label>Motif de la recherche (obligatoire — traçabilité)</label>
+    <textarea id="inv-reason" placeholder="Ex: vérification pré-embauche avec consentement"></textarea>
   </div>
-  <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px">
-    <button class="secondary" onclick="document.getElementById('new-inv-dialog').close()">Annuler</button>
-    <button onclick="createInvestigation()">Créer</button>
+  <div class="row-end">
+    <button class="ghost" onclick="document.getElementById('new-inv-dialog').close()">Annuler</button>
+    <button class="primary" onclick="createInvestigation()">Créer</button>
   </div>
 </dialog>
 
 <dialog id="settings-dialog">
-  <h2 style="margin-top:0">Paramètres</h2>
-  <div class="field"><label>Fournisseur LLM</label>
+  <h2>Paramètres</h2>
+  <div class="field"><label>Fournisseur IA</label>
     <select id="cfg-provider">
+      <option value="ollama">Ollama — IA locale gratuite (recommandé)</option>
       <option value="anthropic">API Claude (Anthropic)</option>
-      <option value="ollama">Ollama (local)</option>
     </select>
   </div>
-  <div class="field"><label>Clé API Anthropic</label><input id="cfg-anthropic-key" type="password" placeholder="sk-ant-..." /></div>
-  <div class="field"><label>Modèle Anthropic</label><input id="cfg-anthropic-model" placeholder="claude-sonnet-4-5" /></div>
-  <div class="field"><label>Modèle Ollama</label><input id="cfg-ollama-model" placeholder="llama3.1" /></div>
+  <div class="field"><label>Modèle Ollama</label><input id="cfg-ollama-model" placeholder="qwen2.5:7b" /></div>
   <div class="field"><label>URL Ollama</label><input id="cfg-ollama-url" placeholder="http://localhost:11434" /></div>
-  <div class="field"><label>Instagram sessionid (pour toutatis — optionnel)</label><input id="cfg-ig-session" type="password" />
-    <div class="legal-note">⚠️ Hors CGU Instagram. À vos risques, usage légal uniquement.</div>
+  <div class="field"><label>Clé API Anthropic (optionnel)</label><input id="cfg-anthropic-key" type="password" placeholder="sk-ant-…" /></div>
+  <div class="field"><label>Modèle Anthropic</label><input id="cfg-anthropic-model" placeholder="claude-sonnet-4-5" /></div>
+  <div class="field"><label>Instagram sessionid (toutatis — optionnel)</label><input id="cfg-ig-session" type="password" />
+    <div class="legal">⚠ Hors CGU Instagram. Usage légal autorisé uniquement, à vos risques.</div>
   </div>
-  <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px">
-    <button class="secondary" onclick="document.getElementById('settings-dialog').close()">Fermer</button>
-    <button onclick="saveSettings()">Enregistrer</button>
+  <div class="row-end">
+    <button class="ghost" onclick="document.getElementById('settings-dialog').close()">Fermer</button>
+    <button class="primary" onclick="saveSettings()">Enregistrer</button>
   </div>
+</dialog>
+
+<dialog id="catalog-dialog">
+  <h2>Catalogue des outils Kali</h2>
+  <input class="cat-search" id="cat-search" placeholder="Filtrer (nom, catégorie, description)…" oninput="renderCatalog()" />
+  <div class="cat-stats" id="cat-stats"></div>
+  <div class="cat-list" id="cat-list"></div>
+  <div class="row-end"><button class="ghost" onclick="document.getElementById('catalog-dialog').close()">Fermer</button></div>
 </dialog>
 
 <script src="app.js"></script>

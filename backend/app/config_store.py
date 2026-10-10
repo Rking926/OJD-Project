@@ -12,10 +12,10 @@ import os
 CONFIG_PATH = "./data/config.json"
 
 DEFAULT_CONFIG = {
-    "llm_provider": "anthropic",  # "anthropic" | "ollama"
+    "llm_provider": "ollama",  # "anthropic" | "ollama" — défaut : IA locale gratuite
     "anthropic_api_key": "",
     "anthropic_model": "claude-sonnet-4-5",
-    "ollama_model": "llama3.1",
+    "ollama_model": "qwen2.5:7b",
     "ollama_base_url": "http://localhost:11434",
     "module_config": {
         "instagram_sessionid": "",

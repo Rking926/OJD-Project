@@ -31,10 +31,11 @@ MAX_TOOL_ROUNDS = 6
 def _tools_schema() -> list[dict]:
     schema = []
     for m in list_modules():
+        custom = m.input_schema()
         schema.append({
             "name": m.name,
             "description": m.description + (f" [{m.legal_notice}]" if m.legal_notice else ""),
-            "input_schema": {
+            "input_schema": custom or {
                 "type": "object",
                 "properties": {
                     "input_type": {"type": "string", "enum": [t.value for t in m.accepts]},
@@ -72,8 +73,10 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
 
         for tc in response.tool_calls:
             module = get_module(tc.name)
-            input_type = tc.arguments.get("input_type", "")
-            value = tc.arguments.get("value", "")
+            args = tc.arguments or {}
+            # Convention standard {input_type, value} ou spécifique {tool, target}.
+            input_type = args.get("input_type", args.get("tool", ""))
+            value = args.get("value", args.get("target", ""))
 
             if module is None:
                 result_text = f"Module inconnu: {tc.name}"
@@ -85,7 +88,11 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
                 )
                 status = "refused"
             else:
-                result = module.run(input_type, value, llm_config.get("module_config", {}))
+                mc = llm_config.get("module_config", {})
+                if module.input_schema() is not None:
+                    result = module.run(config=mc, **args)
+                else:
+                    result = module.run(input_type, value, mc)
                 status = result.status
                 for ent in result.entities:
                     db_entity = Entity(
