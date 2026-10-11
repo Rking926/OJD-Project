@@ -40,22 +40,24 @@ async function loadInvestigations() {
   }
 }
 
-function openNewInvestigationDialog() {
-  document.getElementById("inv-title").value = "";
-  document.getElementById("inv-reason").value = "";
-  document.getElementById("new-inv-dialog").showModal();
-}
-
-async function createInvestigation() {
-  const title = document.getElementById("inv-title").value.trim() || "Enquête sans titre";
-  const reason = document.getElementById("inv-reason").value.trim();
-  if (!reason) { alert("Le motif de la recherche est obligatoire."); return; }
-  try {
-    const inv = await api("/investigations", { method: "POST", body: JSON.stringify({ title, reason }) });
-    document.getElementById("new-inv-dialog").close();
-    await loadInvestigations();
-    selectInvestigation(inv.id);
-  } catch (e) { alert(e.message); }
+// Nouveau chat : on vide l'écran et on attend le premier message.
+// L'enregistrement est créé automatiquement à l'envoi du premier message.
+function newChat() {
+  currentInvestigationId = null;
+  const ta = document.getElementById("prompt-input");
+  ta.disabled = false;
+  ta.value = "";
+  ta.focus();
+  document.getElementById("composer-hint").textContent =
+    "Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne";
+  document.getElementById("transcript").innerHTML = `
+    <div class="welcome">
+      <b>✻ Nouveau chat</b>
+      <div class="dim">Explique ta recherche en langage naturel. Le chat se nomme tout seul.</div>
+    </div>`;
+  loadInvestigations();
+  renderEntities([]);
+  renderAudit([]);
 }
 
 async function selectInvestigation(id) {
@@ -106,7 +108,20 @@ function escapeHtml(s) {
 }
 
 async function sendPromptText(text) {
-  if (!text.trim() || !currentInvestigationId) return;
+  if (!text.trim()) return;
+  // Crée le chat automatiquement au premier message (titre = début du message).
+  if (!currentInvestigationId) {
+    const title = text.trim().slice(0, 48) + (text.trim().length > 48 ? "…" : "");
+    try {
+      const inv = await api("/investigations", {
+        method: "POST",
+        body: JSON.stringify({ title, reason: text.trim() }),
+      });
+      currentInvestigationId = inv.id;
+      document.getElementById("transcript").innerHTML = "";
+      loadInvestigations();
+    } catch (e) { alert(e.message); return; }
+  }
   addTurn("user", text);
   document.getElementById("prompt-input").value = "";
   autoGrow();
@@ -243,5 +258,5 @@ async function saveSettings() {
 }
 
 // ---------- Init ----------
-loadInvestigations();
 loadStats();
+newChat();

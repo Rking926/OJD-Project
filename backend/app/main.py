@@ -80,20 +80,39 @@ def api_put_config(body: ConfigIn):
 # ---------- Investigations ----------
 
 class InvestigationIn(BaseModel):
-    title: str
-    reason: str
+    title: str = ""
+    reason: str = ""
 
 
 @app.post("/api/investigations")
 def api_create_investigation(body: InvestigationIn):
-    if not body.reason.strip():
-        raise HTTPException(400, "Le motif de la recherche est obligatoire (traçabilité).")
     db = SessionLocal()
     try:
-        inv = Investigation(title=body.title, reason=body.reason)
+        inv = Investigation(
+            title=body.title.strip() or "Nouveau chat",
+            reason=body.reason.strip() or "non spécifié",
+        )
         db.add(inv)
         db.commit()
         return {"id": inv.id, "title": inv.title, "reason": inv.reason, "created_at": str(inv.created_at)}
+    finally:
+        db.close()
+
+
+class RenameIn(BaseModel):
+    title: str
+
+
+@app.put("/api/investigations/{inv_id}")
+def api_rename_investigation(inv_id: str, body: RenameIn):
+    db = SessionLocal()
+    try:
+        inv = db.get(Investigation, inv_id)
+        if not inv:
+            raise HTTPException(404, "Chat introuvable.")
+        inv.title = body.title.strip() or inv.title
+        db.commit()
+        return {"id": inv.id, "title": inv.title}
     finally:
         db.close()
 

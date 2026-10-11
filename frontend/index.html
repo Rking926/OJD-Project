@@ -88,11 +88,11 @@
   <div class="sidebar">
     <div class="brand"><span class="star">✻</span> OJD OSINT</div>
     <div class="tagline">assistant d'investigation</div>
-    <button class="side-btn" onclick="openNewInvestigationDialog()">+ nouvelle enquête</button>
+    <button class="side-btn" onclick="newChat()">+ nouveau chat</button>
     <button class="side-btn" onclick="openCatalog()">▤ catalogue outils</button>
     <button class="side-btn" onclick="toggleDrawer()">▦ résultats</button>
     <button class="side-btn" onclick="openSettingsDialog()">⚙ paramètres</button>
-    <div class="side-section">Enquêtes</div>
+    <div class="side-section">Conversations</div>
     <div id="investigation-list"></div>
     <div class="side-section">Système</div>
     <div class="stat-line" id="sys-stats">…</div>
@@ -125,18 +125,6 @@
   <h3>Journal d'audit</h3>
   <div id="audit"></div>
 </div>
-
-<dialog id="new-inv-dialog">
-  <h2>Nouvelle enquête</h2>
-  <div class="field"><label>Titre</label><input id="inv-title" placeholder="Ex: Vérification identité candidat" /></div>
-  <div class="field"><label>Motif de la recherche (obligatoire — traçabilité)</label>
-    <textarea id="inv-reason" placeholder="Ex: vérification pré-embauche avec consentement"></textarea>
-  </div>
-  <div class="row-end">
-    <button class="ghost" onclick="document.getElementById('new-inv-dialog').close()">Annuler</button>
-    <button class="primary" onclick="createInvestigation()">Créer</button>
-  </div>
-</dialog>
 
 <dialog id="settings-dialog">
   <h2>Paramètres</h2>
