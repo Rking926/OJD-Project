@@ -197,6 +197,7 @@ document.addEventListener("keydown", (e) => {
     case "k": e.preventDefault(); openCatalog(); break;
     case "t": e.preventDefault(); openTools(); break;
     case "r": e.preventDefault(); toggleDrawer(); break;
+    case "g": e.preventDefault(); openGraph(); break;
     case ",": e.preventDefault(); openSettingsDialog(); break;
     case "?": e.preventDefault(); openHelp(); break;
     case "/": e.preventDefault(); document.getElementById("prompt-input").focus(); break;
@@ -235,6 +236,70 @@ function renderEntities(entities) {
     div.innerHTML = `<div class="t">${e.type}</div><div>${escapeHtml(e.value)}</div><div class="dim">via ${e.source_module}</div>${extra}`;
     c.appendChild(div);
   }
+}
+
+// ---------- Graphe des liens (Cytoscape) ----------
+
+const TYPE_COLORS = {
+  username: "#d97757", email: "#7fb069", phone: "#e0a458", domain: "#6db3d9",
+  person: "#cc99e0", location: "#e07a9a", ip: "#9a9088", url: "#8fbf9f",
+  breach: "#e05c5c", other: "#9a9088",
+};
+let cyInstance = null;
+
+async function openGraph() {
+  document.getElementById("graph-dialog").showModal();
+  const cont = document.getElementById("cy");
+  if (!currentInvestigationId) {
+    cont.innerHTML = '<div class="dim" style="padding:20px">Aucune enquête sélectionnée.</div>';
+    return;
+  }
+  const d = await api(`/investigations/${currentInvestigationId}`);
+  renderGraph(d.entities || [], d.relations || []);
+}
+
+function renderGraph(entities, relations) {
+  const cont = document.getElementById("cy");
+  const legend = document.getElementById("graph-legend");
+  const ids = new Set(entities.map(e => e.id));
+  const elements = [];
+  for (const e of entities) {
+    elements.push({ data: { id: e.id, label: (e.value || "").slice(0, 30), type: e.type, src: e.source_module } });
+  }
+  for (const r of relations) {
+    if (ids.has(r.from) && ids.has(r.to)) {
+      elements.push({ data: { id: r.id, source: r.from, target: r.to, label: r.label } });
+    }
+  }
+
+  const types = [...new Set(entities.map(e => e.type))];
+  legend.innerHTML = types.map(t =>
+    `<span style="color:${TYPE_COLORS[t] || "#9a9088"}">● ${escapeHtml(t)}</span>`).join("");
+
+  if (cyInstance) { cyInstance.destroy(); cyInstance = null; }
+  if (!elements.length) {
+    cont.innerHTML = '<div class="dim" style="padding:20px">Aucune entité à afficher. Lance une recherche d\'abord.</div>';
+    return;
+  }
+  cont.innerHTML = "";
+  cyInstance = cytoscape({
+    container: cont,
+    elements,
+    style: [
+      { selector: "node", style: {
+        "background-color": (ele) => TYPE_COLORS[ele.data("type")] || "#9a9088",
+        "label": "data(label)", "color": "#e8e3da", "font-size": "9px",
+        "font-family": "monospace", "text-valign": "bottom", "text-margin-y": "4px",
+        "width": "18px", "height": "18px", "border-width": 1, "border-color": "#1a1816",
+      }},
+      { selector: "edge", style: {
+        "width": 1, "line-color": "#4a443d", "target-arrow-color": "#4a443d",
+        "target-arrow-shape": "triangle", "curve-style": "bezier", "arrow-scale": 0.7,
+        "label": "data(label)", "font-size": "7px", "color": "#9a9088", "text-rotation": "autorotate",
+      }},
+    ],
+    layout: { name: "cose", animate: false, padding: 24, nodeRepulsion: 6000, idealEdgeLength: 70 },
+  });
 }
 
 // ---------- Mes outils (plugins) ----------

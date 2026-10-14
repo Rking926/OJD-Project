@@ -14,7 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from sqlalchemy.orm import Session
 
-from ..models import Entity, EntityType, Investigation
+from ..models import Entity, EntityType, Investigation, Relation, new_id
 from ..modules.base import ModuleResult
 from ..modules.registry import get_module, list_modules
 from .providers import LLMProvider, build_provider
@@ -160,13 +160,42 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
     new_entities: list[Entity] = []
     tool_call_log: list[dict] = []
 
-    # Dédoublonnage : une même entité (type + valeur) n'est enregistrée qu'une
-    # fois par enquête, même si plusieurs outils la renvoient. On initialise
-    # avec les entités déjà présentes en base pour cette enquête.
-    seen_entities: set[tuple[str, str]] = {
-        (e.type.value if hasattr(e.type, "value") else str(e.type), e.value)
-        for e in db.query(Entity).filter(Entity.investigation_id == investigation.id).all()
+    # Dédoublonnage : une même entité (type + valeur) n'existe qu'une fois par
+    # enquête, même si plusieurs outils la renvoient. On indexe les entités
+    # existantes pour pouvoir aussi créer des relations qui les référencent.
+    inv_id = investigation.id
+    entity_by_key: dict[tuple[str, str], Entity] = {
+        (e.type.value if hasattr(e.type, "value") else str(e.type), e.value): e
+        for e in db.query(Entity).filter(Entity.investigation_id == inv_id).all()
     }
+    seen_relations: set[tuple[str, str, str]] = {
+        (r.from_entity_id, r.to_entity_id, r.label)
+        for r in db.query(Relation).filter(Relation.investigation_id == inv_id).all()
+    }
+
+    def _get_or_create(type_value: str, value: str, source: str,
+                       confidence: float = 1.0, extra: dict | None = None) -> tuple[Entity, bool]:
+        tv = type_value if type_value in EntityType._value2member_map_ else "other"
+        key = (tv, value)
+        existing = entity_by_key.get(key)
+        if existing is not None:
+            return existing, False
+        e = Entity(id=new_id(), investigation_id=inv_id, type=EntityType(tv),
+                   value=value, source_module=source, confidence=confidence, extra=extra or {})
+        db.add(e)
+        entity_by_key[key] = e
+        new_entities.append(e)
+        return e, True
+
+    def _link(parent: Entity, child: Entity, label: str) -> None:
+        if parent is None or child is None or parent.id == child.id:
+            return
+        rkey = (parent.id, child.id, label)
+        if rkey in seen_relations:
+            return
+        seen_relations.add(rkey)
+        db.add(Relation(id=new_id(), investigation_id=inv_id,
+                        from_entity_id=parent.id, to_entity_id=child.id, label=label))
 
     for _ in range(MAX_TOOL_ROUNDS):
         response = provider.chat(messages=messages, tools=tools, system=SYSTEM_PROMPT)
@@ -229,24 +258,23 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
             else:
                 result = results[tc.id]
                 status = result.status
+
+                # Nœud "parent" = la cible interrogée (pseudo, email, domaine…),
+                # pour relier visuellement ce qui a été trouvé à partir d'elle.
+                parent = None
+                if value:
+                    p_type = input_type if input_type in EntityType._value2member_map_ else _infer_type(value)
+                    parent, _ = _get_or_create(p_type, value, source=f"requête:{module.name}")
+
                 added_this_call = 0
                 for ent in result.entities:
-                    etype = EntityType(ent.type) if ent.type in EntityType._value2member_map_ else EntityType.OTHER
-                    key = (etype.value, ent.value)
-                    if key in seen_entities:
-                        continue  # déjà vue (même outil ou outil différent) -> on ne duplique pas
-                    seen_entities.add(key)
-                    db_entity = Entity(
-                        investigation_id=investigation.id,
-                        type=etype,
-                        value=ent.value,
-                        source_module=module.name,
-                        confidence=ent.confidence,
-                        extra=ent.extra,
+                    child, created = _get_or_create(
+                        ent.type, ent.value, source=module.name,
+                        confidence=ent.confidence, extra=ent.extra,
                     )
-                    db.add(db_entity)
-                    new_entities.append(db_entity)
-                    added_this_call += 1
+                    _link(parent, child, module.name)
+                    if created:
+                        added_this_call += 1
                 result_text = json.dumps({
                     "status": result.status,
                     "detail": result.detail,
