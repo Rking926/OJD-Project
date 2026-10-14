@@ -85,15 +85,24 @@ def _run_module(module, args: dict, mc: dict) -> ModuleResult:
     Fonction pure, sûre à lancer dans un thread. Les écritures DB (entités,
     audit) sont faites ensuite sur le thread principal par l'appelant.
     """
-    key = _cache_key(module.name, args)
+    # Clé de cache sur les arguments EFFECTIFS (normalisés pour les modules
+    # standards) : deux appels logiquement identiques mais aux arguments bruts
+    # différents (fréquent avec un LLM) tapent alors le même cache -> on évite
+    # de relancer le même outil plusieurs fois dans une enquête.
+    is_custom = module.input_schema() is not None
+    if is_custom:
+        key = _cache_key(module.name, args)
+    else:
+        input_type, value = _normalize_std_args(module, args)
+        key = _cache_key(module.name, {"input_type": input_type, "value": value})
+
     cached = _RESULT_CACHE.get(key)
     if cached and (time.time() - cached[0]) < _CACHE_TTL:
         return cached[1]
 
-    if module.input_schema() is not None:
+    if is_custom:
         result = module.run(config=mc, **args)
     else:
-        input_type, value = _normalize_std_args(module, args)
         result = module.run(input_type, value, mc)
 
     if result.status == "ok":
