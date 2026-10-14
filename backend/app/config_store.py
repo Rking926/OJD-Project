@@ -15,10 +15,11 @@ DEFAULT_CONFIG = {
     "llm_provider": "ollama",  # "anthropic" | "ollama" — défaut : IA locale gratuite
     "anthropic_api_key": "",
     "anthropic_model": "claude-sonnet-4-5",
-    "ollama_model": "qwen2.5:7b",
+    "ollama_model": "huihui_ai/qwen2.5-abliterate:7b",
     "ollama_base_url": "http://localhost:11434",
     "module_config": {
         "instagram_sessionid": "",
+        "hibp_api_key": "",
     },
 }
 

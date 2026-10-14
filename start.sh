@@ -8,6 +8,13 @@ PORT=8000
 LOG_DIR="$PROJECT_DIR/backend/data/logs"
 mkdir -p "$LOG_DIR"
 
+# Les modèles IA vivent sur le disque Windows (partition Linux trop petite).
+export OLLAMA_MODELS="/mnt/windows/ollama-models"
+if ! mountpoint -q /mnt/windows; then
+  echo "ATTENTION : /mnt/windows n'est pas monté — les modèles IA sont indisponibles." >&2
+  echo "  Monte-le avec : sudo mount /mnt/windows   (ou vérifie /etc/fstab), puis relance." >&2
+fi
+
 # 1. IA locale (Ollama), si pas déjà lancée
 if ! curl -s localhost:11434/api/version >/dev/null 2>&1; then
   if [ -x "$OLLAMA_BIN" ]; then

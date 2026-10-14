@@ -7,17 +7,25 @@ Ajouter un outil = créer un fichier module + l'instancier ici. Rien d'autre
 from __future__ import annotations
 
 from .base import OsintModule
+from .hibp_module import HibpModule
+from .holehe_module import HoleheModule
 from .kali_runner import ReconToolModule
+from .maigret_module import MaigretModule
 from .sherlock_module import SherlockModule
 from .toutatis_module import ToutatisModule
 from .whois_module import WhoisModule
+from .xposedornot_module import XposedOrNotModule
 
 _MODULES: dict[str, OsintModule] = {
     m.name: m
     for m in [
         SherlockModule(),
+        MaigretModule(),
         WhoisModule(),
         ToutatisModule(),
+        XposedOrNotModule(),
+        HoleheModule(),
+        HibpModule(),
         ReconToolModule(),
     ]
 }
