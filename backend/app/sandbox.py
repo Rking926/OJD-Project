@@ -90,6 +90,44 @@ def in_scope(target: str, cfg: dict) -> tuple[bool, str]:
     )
 
 
+def in_scope_strict(target: str, cfg: dict) -> tuple[bool, str]:
+    """Périmètre STRICT pour les outils d'exploitation (ex: metasploit).
+
+    Contrairement à `in_scope`, on **n'autorise pas** le périmètre par défaut
+    RFC1918 large (qui engloberait les autres appareils du réseau domestique).
+    Seuls sont autorisés :
+      - le loopback (127.0.0.1 / ::1 / localhost) — typiquement la VM de labo
+        exposée via port-forward QEMU ;
+      - une cible listée **explicitement** dans sandbox.scope.
+    Ainsi, lancer un exploit sur la box ou le téléphone d'un proche est refusé
+    tant que la cible n'a pas été déclarée volontairement comme labo.
+    """
+    host = _extract_host(target)
+    if not host:
+        return False, "cible vide"
+
+    # Loopback = la VM de labo locale.
+    try:
+        if ipaddress.ip_address(host).is_loopback:
+            return True, "loopback (VM de labo locale)"
+    except ValueError:
+        if host == "localhost":
+            return True, "loopback (VM de labo locale)"
+
+    scope = [p for p in cfg.get("sandbox", {}).get("scope", []) if p.strip()]
+    for pat in scope:
+        if _matches_pattern(host, pat):
+            return True, f"cible de labo déclarée explicitement ({pat})"
+
+    return False, (
+        f"cible '{host}' non autorisée pour un outil d'exploitation. Les exploits "
+        f"ne visent que la VM de labo (127.0.0.1) ou une cible que tu as ajoutée "
+        f"explicitement dans Paramètres → périmètre (sandbox.scope). Le périmètre "
+        f"RFC1918 large ne suffit pas ici, pour ne pas toucher les autres appareils "
+        f"de ton réseau."
+    )
+
+
 def wrap_argv(argv: list[str], cfg: dict) -> list[str]:
     """Enrobe argv selon le backend de sandbox configuré."""
     sb = cfg.get("sandbox", {})

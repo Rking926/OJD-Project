@@ -59,6 +59,7 @@ class AnthropicProvider(LLMProvider):
         resp = self._client.messages.create(
             model=self._model,
             max_tokens=4096,
+            temperature=0.3,  # bas = factuel, moins d'invention (précision OSINT)
             system=system,
             messages=messages,
             tools=self._to_anthropic_tools(tools) if tools else [],
@@ -95,7 +96,8 @@ class OllamaProvider(LLMProvider):
 
         self._model = model
         self._base_url = base_url.rstrip("/")
-        self._http = httpx.Client(timeout=120)
+        # Timeout large : un modèle local + plusieurs tours peut être lent.
+        self._http = httpx.Client(timeout=300)
 
     def _to_ollama_tools(self, tools: list[dict]) -> list[dict]:
         return [
@@ -119,6 +121,14 @@ class OllamaProvider(LLMProvider):
                 "messages": payload_messages,
                 "tools": self._to_ollama_tools(tools) if tools else [],
                 "stream": False,
+                # Précision : température basse (moins d'invention) + contexte
+                # élargi pour que le modèle garde en mémoire tous les résultats
+                # d'outils des tours précédents (sinon il « oublie » et recoupe mal).
+                "options": {
+                    "temperature": 0.2,
+                    "top_p": 0.9,
+                    "num_ctx": 8192,
+                },
             },
         )
         resp.raise_for_status()

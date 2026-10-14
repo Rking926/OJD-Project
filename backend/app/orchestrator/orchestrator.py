@@ -8,6 +8,7 @@ renvoyé au LLM qui peut enchaîner d'autres appels ou conclure.
 from __future__ import annotations
 
 import json
+import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -30,6 +31,54 @@ def _cache_key(name: str, args: dict) -> str:
     return name + "|" + json.dumps(args, sort_keys=True, ensure_ascii=False)
 
 
+_EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+_DOMAIN_RE = re.compile(r"^(?!-)[A-Za-z0-9-]{1,63}(?:\.[A-Za-z0-9-]{1,63})+$")
+_IP_RE = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
+_PHONE_RE = re.compile(r"^\+?[0-9\s().-]{6,}$")
+
+
+def _infer_type(value: str) -> str:
+    v = value.strip()
+    if _EMAIL_RE.match(v):
+        return "email"
+    if _IP_RE.match(v):
+        return "ip"
+    if _DOMAIN_RE.match(v):
+        return "domain"
+    if _PHONE_RE.match(v) and sum(c.isdigit() for c in v) >= 6:
+        return "phone"
+    return "username"
+
+
+def _normalize_std_args(module, args: dict) -> tuple[str, str]:
+    """Corrige les arguments mal remplis par le LLM (fréquent avec un petit
+    modèle local). Les modules standards acceptent souvent un seul type d'entrée :
+    on force alors ce type, et on récupère la valeur même si le LLM l'a mise dans
+    une clé inattendue. Gain de précision/robustesse sans dépendre du modèle.
+    """
+    value = ""
+    for k in ("value", "query", "target", "username", "email", "domain", "phone", "input"):
+        v = args.get(k)
+        if isinstance(v, str) and v.strip():
+            value = v.strip()
+            break
+
+    accepts = [t.value for t in getattr(module, "accepts", [])]
+    it = (args.get("input_type") or "").strip()
+
+    # Si le LLM a mis la valeur dans input_type et laissé value vide, on récupère.
+    if not value and it and it not in accepts:
+        value = it
+
+    if it not in accepts:
+        if len(accepts) == 1:
+            it = accepts[0]            # un seul type possible -> on l'impose
+        elif accepts:
+            inferred = _infer_type(value)
+            it = inferred if inferred in accepts else accepts[0]
+    return it, value
+
+
 def _run_module(module, args: dict, mc: dict) -> ModuleResult:
     """Exécute un module (appel réseau/subprocess) sans toucher à la base.
 
@@ -44,8 +93,7 @@ def _run_module(module, args: dict, mc: dict) -> ModuleResult:
     if module.input_schema() is not None:
         result = module.run(config=mc, **args)
     else:
-        input_type = args.get("input_type", "")
-        value = args.get("value", "")
+        input_type, value = _normalize_std_args(module, args)
         result = module.run(input_type, value, mc)
 
     if result.status == "ok":
@@ -53,16 +101,32 @@ def _run_module(module, args: dict, mc: dict) -> ModuleResult:
     return result
 
 SYSTEM_PROMPT = (
-    "Tu es l'assistant d'une application d'investigation OSINT (recherche en sources "
-    "ouvertes), utilisée par des professionnels habilités. Pour chaque demande de "
-    "l'utilisateur, décide quels outils (modules) appeler, avec quelle valeur d'entrée "
-    "(username, email, phone, domain...). N'invente jamais de résultat : base-toi "
-    "uniquement sur ce que les outils renvoient. Si un outil est refusé ou mal "
-    "configuré, explique pourquoi à l'utilisateur. Termine toujours par un résumé "
-    "clair des entités trouvées (profils, emails, domaines liés, etc.) en français."
+    "Tu es l'assistant d'investigation OSINT d'une application professionnelle "
+    "(sources ouvertes uniquement). Ta mission : produire des informations "
+    "PRÉCISES, VÉRIFIÉES et EXHAUSTIVES sur la cible, sans JAMAIS rien inventer.\n\n"
+    "MÉTHODE (systématique) :\n"
+    "1. Identifie le type d'entrée (pseudo, email, téléphone, domaine, nom) et "
+    "choisis TOUS les outils pertinents pour ce type — pas un seul.\n"
+    "2. Lance-les (plusieurs en parallèle dans un même tour, c'est permis).\n"
+    "3. RECOUPE et ENCHAÎNE : chaque info trouvée relance une recherche. Ex : un "
+    "email découvert → holehe + hibp + xposedornot dessus ; un domaine → whois + "
+    "recon ; un profil → exploite le pseudo associé. Continue tant que de "
+    "nouvelles pistes apparaissent.\n"
+    "4. Arrête-toi quand les outils n'apportent plus rien de nouveau.\n\n"
+    "RÈGLES STRICTES :\n"
+    "- N'affirme JAMAIS une info que les outils n'ont pas renvoyée. Aucune "
+    "supposition présentée comme un fait.\n"
+    "- Distingue CONFIRMÉ (trouvé par un outil) de PISTE à vérifier.\n"
+    "- Si plusieurs outils confirment la même info, signale-le (fiabilité élevée).\n"
+    "- Si un outil échoue/est refusé, dis-le et propose une alternative.\n\n"
+    "SYNTHÈSE FINALE (toujours, en français, structurée par catégories) :\n"
+    "Profils/comptes · Emails · Téléphones · Domaines · Fuites de données · Autres.\n"
+    "Pour chaque élément : la valeur, la/les source(s) (outils), le niveau de "
+    "fiabilité, et ses liens avec les autres éléments. Termine par les pistes non "
+    "confirmées à explorer. Sois factuel, dense et utile — pas de remplissage."
 )
 
-MAX_TOOL_ROUNDS = 6
+MAX_TOOL_ROUNDS = 8
 
 
 def _tools_schema() -> list[dict]:
@@ -96,6 +160,14 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
     new_entities: list[Entity] = []
     tool_call_log: list[dict] = []
 
+    # Dédoublonnage : une même entité (type + valeur) n'est enregistrée qu'une
+    # fois par enquête, même si plusieurs outils la renvoient. On initialise
+    # avec les entités déjà présentes en base pour cette enquête.
+    seen_entities: set[tuple[str, str]] = {
+        (e.type.value if hasattr(e.type, "value") else str(e.type), e.value)
+        for e in db.query(Entity).filter(Entity.investigation_id == investigation.id).all()
+    }
+
     for _ in range(MAX_TOOL_ROUNDS):
         response = provider.chat(messages=messages, tools=tools, system=SYSTEM_PROMPT)
 
@@ -116,8 +188,12 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
         for tc in response.tool_calls:
             module = get_module(tc.name)
             args = tc.arguments or {}
-            input_type = args.get("input_type", args.get("tool", ""))
-            value = args.get("value", args.get("target", ""))
+            # Valeurs affichées (log/UI) : normalisées pour les modules standards.
+            if module is not None and module.input_schema() is None:
+                input_type, value = _normalize_std_args(module, args)
+            else:
+                input_type = args.get("input_type", args.get("tool", ""))
+                value = args.get("value", args.get("target", ""))
 
             if module is None:
                 planned.append((tc, None, args, input_type, value, False,
@@ -153,10 +229,16 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
             else:
                 result = results[tc.id]
                 status = result.status
+                added_this_call = 0
                 for ent in result.entities:
+                    etype = EntityType(ent.type) if ent.type in EntityType._value2member_map_ else EntityType.OTHER
+                    key = (etype.value, ent.value)
+                    if key in seen_entities:
+                        continue  # déjà vue (même outil ou outil différent) -> on ne duplique pas
+                    seen_entities.add(key)
                     db_entity = Entity(
                         investigation_id=investigation.id,
-                        type=EntityType(ent.type) if ent.type in EntityType._value2member_map_ else EntityType.OTHER,
+                        type=etype,
                         value=ent.value,
                         source_module=module.name,
                         confidence=ent.confidence,
@@ -164,10 +246,12 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
                     )
                     db.add(db_entity)
                     new_entities.append(db_entity)
+                    added_this_call += 1
                 result_text = json.dumps({
                     "status": result.status,
                     "detail": result.detail,
                     "entities_found": len(result.entities),
+                    "nouvelles_entites": added_this_call,
                     "entities": [{"type": e.type, "value": e.value} for e in result.entities],
                 }, ensure_ascii=False)
 

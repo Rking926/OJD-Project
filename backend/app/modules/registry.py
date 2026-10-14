@@ -18,6 +18,7 @@ from .hibp_module import HibpModule
 from .holehe_module import HoleheModule
 from .kali_runner import ReconToolModule
 from .maigret_module import MaigretModule
+from .metasploit_module import MetasploitModule
 from .sherlock_module import SherlockModule
 from .toutatis_module import ToutatisModule
 from .user_command import UserCommandModule
@@ -33,6 +34,7 @@ _CORE: list[OsintModule] = [
     XposedOrNotModule(),
     HibpModule(),
     ReconToolModule(),
+    MetasploitModule(),
 ]
 _CORE_NAMES = {m.name for m in _CORE}
 
