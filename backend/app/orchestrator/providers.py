@@ -58,7 +58,7 @@ class AnthropicProvider(LLMProvider):
     def chat(self, messages: list[dict], tools: list[dict], system: str) -> LLMResponse:
         resp = self._client.messages.create(
             model=self._model,
-            max_tokens=1024,
+            max_tokens=4096,
             system=system,
             messages=messages,
             tools=self._to_anthropic_tools(tools) if tools else [],

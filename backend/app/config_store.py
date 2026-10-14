@@ -21,6 +21,21 @@ DEFAULT_CONFIG = {
         "instagram_sessionid": "",
         "hibp_api_key": "",
     },
+    # Exécution des outils actifs/offensifs : sandbox + périmètre de cibles.
+    "sandbox": {
+        # "none"   : exécution directe sur l'hôte (déconseillé pour l'offensif)
+        # "docker" : chaque outil tourne dans un conteneur jetable (recommandé)
+        # "firejail": isolation légère via firejail
+        "backend": "none",
+        "image": "kalilinux/kali-rolling",
+        "network": "ojd-lab",  # réseau Docker isolé pour le labo
+        # Si True, un outil actif ne peut viser qu'une cible du périmètre (labo).
+        "enforce_scope": True,
+        # Cibles autorisées : CIDR, IP, ou suffixe d'hôte (ex: ".lab", ".local").
+        # Vide => périmètre par défaut : adresses privées (RFC1918) + loopback
+        # + hôtes .lab/.local/.test/.localhost.
+        "scope": [],
+    },
 }
 
 
@@ -32,6 +47,7 @@ def load_config() -> dict:
     merged = dict(DEFAULT_CONFIG)
     merged.update(data)
     merged["module_config"] = {**DEFAULT_CONFIG["module_config"], **data.get("module_config", {})}
+    merged["sandbox"] = {**DEFAULT_CONFIG["sandbox"], **data.get("sandbox", {})}
     return merged
 
 
@@ -49,5 +65,7 @@ def public_config(config: dict) -> dict:
     mc = dict(out.get("module_config", {}))
     if mc.get("instagram_sessionid"):
         mc["instagram_sessionid"] = "••••configuré"
+    if mc.get("hibp_api_key"):
+        mc["hibp_api_key"] = "••••configuré"
     out["module_config"] = mc
     return out

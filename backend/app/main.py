@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .config_store import load_config, public_config, save_config
-from .models import AuditEvent, Entity, Investigation, Relation, SessionLocal, init_db
+from .models import Entity, Investigation, Relation, SessionLocal, init_db
 from .modules.registry import manifests
 from .orchestrator.orchestrator import run_prompt
 
@@ -49,6 +49,48 @@ def api_catalog():
     return {"stats": stats(), "tools": catalog()}
 
 
+# ---------- Outils ajoutés par l'utilisateur (plugins) ----------
+
+@app.get("/api/tools")
+def api_list_tools():
+    from .user_tools_store import load_tools
+    return load_tools()
+
+
+@app.post("/api/tools")
+def api_add_tool(body: dict):
+    from .user_tools_store import add_tool
+    try:
+        return add_tool(body)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+
+
+@app.put("/api/tools/{name}")
+def api_update_tool(name: str, body: dict):
+    from .user_tools_store import update_tool
+    try:
+        return update_tool(name, body)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc))
+
+
+@app.delete("/api/tools/{name}")
+def api_delete_tool(name: str):
+    from .user_tools_store import delete_tool
+    if not delete_tool(name):
+        raise HTTPException(404, "Outil introuvable.")
+    return {"deleted": name}
+
+
+# ---------- Sandbox / périmètre labo ----------
+
+@app.get("/api/sandbox")
+def api_sandbox():
+    from .sandbox import backend_status
+    return backend_status(load_config())
+
+
 # ---------- Config ----------
 
 class ConfigIn(BaseModel):
@@ -58,6 +100,7 @@ class ConfigIn(BaseModel):
     ollama_model: str | None = None
     ollama_base_url: str | None = None
     module_config: dict | None = None
+    sandbox: dict | None = None
 
 
 @app.get("/api/config")
@@ -70,9 +113,12 @@ def api_put_config(body: ConfigIn):
     config = load_config()
     data = body.model_dump(exclude_none=True)
     module_config = data.pop("module_config", None)
+    sandbox = data.pop("sandbox", None)
     config.update(data)
     if module_config:
         config["module_config"] = {**config.get("module_config", {}), **module_config}
+    if sandbox:
+        config["sandbox"] = {**config.get("sandbox", {}), **sandbox}
     save_config(config)
     return public_config(config)
 
@@ -139,7 +185,6 @@ def api_get_investigation(inv_id: str):
             raise HTTPException(404, "Investigation introuvable.")
         entities = db.query(Entity).filter(Entity.investigation_id == inv_id).all()
         relations = db.query(Relation).filter(Relation.investigation_id == inv_id).all()
-        audit = db.query(AuditEvent).filter(AuditEvent.investigation_id == inv_id).order_by(AuditEvent.created_at).all()
         return {
             "id": inv.id,
             "title": inv.title,
@@ -152,11 +197,6 @@ def api_get_investigation(inv_id: str):
             "relations": [
                 {"id": r.id, "from": r.from_entity_id, "to": r.to_entity_id, "label": r.label}
                 for r in relations
-            ],
-            "audit": [
-                {"module": a.module, "input_value": a.input_value, "status": a.status,
-                 "detail": a.detail, "created_at": str(a.created_at)}
-                for a in audit
             ],
         }
     finally:

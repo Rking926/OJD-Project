@@ -12,25 +12,34 @@
   }
   * { box-sizing: border-box; }
   body { margin:0; font-family: var(--mono); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; }
-  .layout { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+  .layout { display: grid; grid-template-columns: 248px 1fr; height: 100vh; }
 
-  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 14px; overflow-y: auto; }
+  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 14px; overflow-y: auto; display:flex; flex-direction:column; }
   .brand { color: var(--accent); font-weight: 700; font-size: 14px; margin-bottom: 2px; }
   .brand .star { animation: spin 4s linear infinite; display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .tagline { color: var(--muted); font-size: 11px; margin-bottom: 16px; }
   .side-section { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 6px; }
-  .side-btn { display:block; width:100%; text-align:left; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; cursor: pointer; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; }
-  .side-btn:hover { border-color: var(--accent); }
-  .inv-item { padding: 6px 9px; border-radius: 6px; cursor: pointer; margin-bottom: 3px; font-size: 12px; color: var(--muted); }
+  .side-btn { display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; cursor: pointer; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; transition: border-color .12s, background .12s; }
+  .side-btn:hover { border-color: var(--accent); background: var(--bg); }
+  .side-btn .lbl { display:flex; align-items:center; gap:8px; }
+  kbd { font-family: var(--mono); font-size: 10px; background: var(--bg); border: 1px solid var(--border); border-bottom-width:2px; border-radius: 4px; padding: 1px 6px; color: var(--muted); min-width:16px; text-align:center; }
+  .side-btn:hover kbd { border-color: var(--accent); color: var(--accent); }
+  .inv-item { padding: 6px 9px; border-radius: 6px; cursor: pointer; margin-bottom: 3px; font-size: 12px; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .inv-item:hover { background: var(--bg); color: var(--text); }
   .inv-item.active { background: var(--bg); color: var(--accent); border-left: 2px solid var(--accent); }
   .stat-line { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  .side-spacer { flex:1; }
+  .side-foot { border:none; color:var(--muted); justify-content:center; font-size:11px; }
 
   .main { display: flex; flex-direction: column; overflow: hidden; }
   .transcript { flex: 1; overflow-y: auto; padding: 20px 28px; }
-  .welcome { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; color: var(--muted); }
-  .welcome b { color: var(--accent); }
+  .welcome { border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px; margin-bottom: 20px; color: var(--muted); }
+  .welcome b { color: var(--accent); font-size:14px; }
+  .welcome .sub { margin-top:4px; }
+  .examples { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+  .chip { border:1px solid var(--border); border-radius:16px; padding:6px 12px; font-size:11px; color:var(--muted); cursor:pointer; background:transparent; font-family:var(--mono); transition: all .12s; }
+  .chip:hover { border-color:var(--accent); color:var(--text); background:var(--bg); }
   .turn { margin-bottom: 14px; white-space: pre-wrap; }
   .turn .who { color: var(--accent); }
   .turn.user .who { color: var(--text); }
@@ -38,42 +47,51 @@
   .turn.tool .call { color: var(--warn); }
   .ok { color: var(--ok); } .err { color: var(--err); } .refused { color: var(--warn); }
   .dim { color: var(--muted); }
+  .thinking::after { content:"▋"; animation: pulse 1s steps(2) infinite; }
 
   .composer { padding: 14px 28px 20px; border-top: 1px solid var(--border); }
-  .composer .box { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: flex; align-items: flex-end; gap: 8px; background: var(--bg2); }
+  .composer .box { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; display: flex; align-items: flex-end; gap: 8px; background: var(--bg2); transition: border-color .12s; }
   .composer .box:focus-within { border-color: var(--accent); }
   .composer .prompt-char { color: var(--accent); font-weight: 700; padding-bottom: 2px; }
   .composer textarea { flex:1; background: transparent; border: none; color: var(--text); font-family: var(--mono); font-size: 13px; resize: none; height: 22px; max-height: 160px; outline: none; }
-  .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 2px 6px; }
-  .icon-btn:hover { color: var(--accent); }
+  .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 2px 6px; border-radius:6px; }
+  .icon-btn:hover { color: var(--accent); background:var(--bg); }
   .icon-btn.recording { color: var(--err); animation: pulse 1s infinite; }
-  @keyframes pulse { 50% { opacity: .4; } }
-  .hint { color: var(--muted); font-size: 11px; margin-top: 6px; }
+  @keyframes pulse { 50% { opacity: .35; } }
+  .hint { color: var(--muted); font-size: 11px; margin-top: 8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .hint kbd { border-bottom-width:1px; }
 
-  /* Panneau latéral droit (entités/audit) en overlay compact */
-  .drawer { position: fixed; top:0; right:0; width: 360px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; transform: translateX(100%); transition: transform .2s; z-index: 50; }
+  .drawer { position: fixed; top:0; right:0; width: 380px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; transform: translateX(100%); transition: transform .2s; z-index: 50; }
   .drawer.open { transform: translateX(0); }
-  .drawer h3 { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .1em; margin: 16px 0 8px; }
+  .drawer h3 { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .1em; margin: 4px 0 10px; }
   .card { border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
   .card .t { color: var(--accent); font-size: 10px; text-transform: uppercase; }
   .drawer-close { float:right; }
 
-  dialog { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 20px; width: 460px; max-width: 92vw; font-family: var(--mono); }
+  dialog { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 20px; width: 460px; max-width: 92vw; font-family: var(--mono); }
   dialog::backdrop { background: rgba(0,0,0,.65); }
   dialog h2 { font-size: 14px; margin-top: 0; color: var(--accent); }
   .field { margin-bottom: 10px; }
   .field label { font-size: 11px; color: var(--muted); display:block; margin-bottom: 4px; }
   input, textarea, select { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 9px; font-size: 12px; width: 100%; font-family: var(--mono); }
+  input:focus, textarea:focus, select:focus { outline:none; border-color:var(--accent); }
   .row-end { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
   button.primary { background: var(--accent); color: #1a1816; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--mono); font-weight: 600; }
   button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--mono); }
   .legal { font-size: 10px; color: var(--warn); margin-top: 4px; }
 
-  /* Catalogue */
+  /* Fiche raccourcis */
+  .sc-grid { display:grid; grid-template-columns: auto 1fr; gap: 8px 14px; align-items:center; margin-top:6px; }
+  .sc-grid kbd { justify-self:start; }
+  .sc-sec { grid-column: 1 / -1; color: var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.1em; margin-top:8px; }
+
+  /* Catalogue / outils */
   #catalog-dialog { width: 760px; }
   .cat-search { margin-bottom: 10px; }
   .cat-stats { color: var(--muted); font-size: 11px; margin-bottom: 8px; }
   .cat-list { max-height: 60vh; overflow-y: auto; }
+  .cat-item { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; padding: 7px 4px; border-bottom: 1px solid var(--border); }
+  .error { color: var(--err); }
   .tool-row { display: grid; grid-template-columns: 150px 1fr auto; gap: 10px; padding: 6px 8px; border-bottom: 1px solid var(--border); align-items: center; }
   .tool-row .cmd { color: var(--text); }
   .tool-row .desc { color: var(--muted); font-size: 11px; }
@@ -88,32 +106,31 @@
   <div class="sidebar">
     <div class="brand"><span class="star">✻</span> OJD OSINT</div>
     <div class="tagline">assistant d'investigation</div>
-    <button class="side-btn" onclick="newChat()">+ nouveau chat</button>
-    <button class="side-btn" onclick="openCatalog()">▤ catalogue outils</button>
-    <button class="side-btn" onclick="toggleDrawer()">▦ résultats</button>
-    <button class="side-btn" onclick="openSettingsDialog()">⚙ paramètres</button>
+    <button class="side-btn" onclick="newChat()"><span class="lbl">+ nouveau chat</span><kbd>N</kbd></button>
+    <button class="side-btn" onclick="openCatalog()"><span class="lbl">▤ catalogue</span><kbd>K</kbd></button>
+    <button class="side-btn" onclick="openTools()"><span class="lbl">➕ mes outils</span><kbd>T</kbd></button>
+    <button class="side-btn" onclick="toggleDrawer()"><span class="lbl">▦ résultats</span><kbd>R</kbd></button>
+    <button class="side-btn" onclick="openSettingsDialog()"><span class="lbl">⚙ paramètres</span><kbd>,</kbd></button>
     <div class="side-section">Conversations</div>
     <div id="investigation-list"></div>
+    <div class="side-spacer"></div>
     <div class="side-section">Système</div>
     <div class="stat-line" id="sys-stats">…</div>
+    <button class="side-btn side-foot" onclick="openHelp()" style="margin-top:10px"><span class="lbl">⌨ raccourcis clavier</span><kbd>?</kbd></button>
   </div>
 
   <div class="main">
-    <div class="transcript" id="transcript">
-      <div class="welcome">
-        <b>✻ Bienvenue sur OJD OSINT</b>
-        <div class="dim">Crée ou sélectionne une enquête, puis décris ta recherche en langage naturel.</div>
-        <div class="dim">Ex : « cherche le pseudo johndoe42 » · « reconnaissance du domaine exemple.com »</div>
-      </div>
-    </div>
+    <div class="transcript" id="transcript"></div>
     <div class="composer">
       <div class="box">
         <span class="prompt-char">&gt;</span>
-        <textarea id="prompt-input" placeholder="Décris ta recherche, ou dicte avec 🎤…" rows="1" disabled></textarea>
-        <button class="icon-btn" id="mic-btn" title="Dicter">🎤</button>
+        <textarea id="prompt-input" placeholder="Décris ta recherche, ou dicte avec 🎤…" rows="1"></textarea>
+        <button class="icon-btn" id="mic-btn" title="Dicter (voix)">🎤</button>
         <button class="icon-btn" id="send-btn" title="Envoyer (Entrée)">⏎</button>
       </div>
-      <div class="hint" id="composer-hint">Sélectionne une enquête pour commencer · Entrée pour envoyer, Maj+Entrée pour une nouvelle ligne</div>
+      <div class="hint">
+        <kbd>Entrée</kbd> envoyer · <kbd>⇧ Entrée</kbd> nouvelle ligne · <kbd>/</kbd> focus · <kbd>?</kbd> aide
+      </div>
     </div>
   </div>
 </div>
@@ -122,9 +139,28 @@
   <button class="icon-btn drawer-close" onclick="toggleDrawer()">✕</button>
   <h3>Entités trouvées</h3>
   <div id="entities"></div>
-  <h3>Journal d'audit</h3>
-  <div id="audit"></div>
 </div>
+
+<dialog id="help-dialog">
+  <h2>⌨ Raccourcis clavier</h2>
+  <div class="sc-grid">
+    <div class="sc-sec">Navigation</div>
+    <kbd>N</kbd><span>Nouveau chat</span>
+    <kbd>K</kbd><span>Catalogue d'outils</span>
+    <kbd>T</kbd><span>Mes outils (ajouter un outil)</span>
+    <kbd>R</kbd><span>Panneau résultats (entités)</span>
+    <kbd>,</kbd><span>Paramètres</span>
+    <kbd>?</kbd><span>Cette fiche</span>
+    <div class="sc-sec">Rédaction</div>
+    <kbd>/</kbd><span>Aller au champ de recherche</span>
+    <kbd>Entrée</kbd><span>Envoyer le message</span>
+    <kbd>⇧ Entrée</kbd><span>Nouvelle ligne</span>
+    <kbd>Échap</kbd><span>Fermer fenêtre / panneau</span>
+  </div>
+  <div class="row-end">
+    <button class="primary" onclick="document.getElementById('help-dialog').close()">Compris</button>
+  </div>
+</dialog>
 
 <dialog id="settings-dialog">
   <h2>Paramètres</h2>
@@ -134,10 +170,11 @@
       <option value="anthropic">API Claude (Anthropic)</option>
     </select>
   </div>
-  <div class="field"><label>Modèle Ollama</label><input id="cfg-ollama-model" placeholder="qwen2.5:7b" /></div>
+  <div class="field"><label>Modèle Ollama</label><input id="cfg-ollama-model" placeholder="huihui_ai/qwen2.5-abliterate:7b" /></div>
   <div class="field"><label>URL Ollama</label><input id="cfg-ollama-url" placeholder="http://localhost:11434" /></div>
   <div class="field"><label>Clé API Anthropic (optionnel)</label><input id="cfg-anthropic-key" type="password" placeholder="sk-ant-…" /></div>
   <div class="field"><label>Modèle Anthropic</label><input id="cfg-anthropic-model" placeholder="claude-sonnet-4-5" /></div>
+  <div class="field"><label>Clé API HIBP (optionnel — active le module hibp)</label><input id="cfg-hibp-key" type="password" /></div>
   <div class="field"><label>Instagram sessionid (toutatis — optionnel)</label><input id="cfg-ig-session" type="password" />
     <div class="legal">⚠ Hors CGU Instagram. Usage légal autorisé uniquement, à vos risques.</div>
   </div>
@@ -153,6 +190,30 @@
   <div class="cat-stats" id="cat-stats"></div>
   <div class="cat-list" id="cat-list"></div>
   <div class="row-end"><button class="ghost" onclick="document.getElementById('catalog-dialog').close()">Fermer</button></div>
+</dialog>
+
+<dialog id="tools-dialog">
+  <h2>Mes outils</h2>
+  <p class="dim" style="font-size:12px;margin-top:0">
+    Ajoute n'importe quel outil installé : l'IA pourra l'appeler.
+    <code>{target}</code> = la cible. Un outil <b>actif</b> ne vise que le
+    périmètre du labo (sandbox).
+  </p>
+  <div id="sandbox-status" class="dim" style="font-size:12px;margin-bottom:8px"></div>
+  <div id="tools-list" class="cat-list"></div>
+  <h3 style="margin-bottom:4px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em">Ajouter un outil</h3>
+  <div style="display:grid;gap:6px">
+    <input id="t-name" placeholder="nom (ex: nmap_scan) — a-z, chiffres, _" />
+    <input id="t-desc" placeholder="description (sert à l'IA pour choisir l'outil)" />
+    <input id="t-cat" placeholder="catégorie (ex: scan, recon, exploit)" />
+    <input id="t-argv" placeholder="commande, ex: nmap -sV -T4 {target}" />
+    <label style="font-size:12px"><input type="checkbox" id="t-active" checked style="width:auto" /> outil actif (limité au périmètre labo)</label>
+    <div id="t-error" class="error" style="font-size:12px"></div>
+  </div>
+  <div class="row-end">
+    <button class="ghost" onclick="document.getElementById('tools-dialog').close()">Fermer</button>
+    <button class="primary" onclick="addTool()">Ajouter</button>
+  </div>
 </dialog>
 
 <script src="app.js"></script>

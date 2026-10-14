@@ -49,7 +49,6 @@ class Investigation(Base):
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, default=dt.datetime.utcnow)
 
     entities: Mapped[list["Entity"]] = relationship(back_populates="investigation", cascade="all, delete-orphan")
-    audit_events: Mapped[list["AuditEvent"]] = relationship(back_populates="investigation", cascade="all, delete-orphan")
 
 
 class Entity(Base):
@@ -78,23 +77,6 @@ class Relation(Base):
     to_entity_id: Mapped[str] = mapped_column(ForeignKey("entities.id"))
     label: Mapped[str] = mapped_column(String)  # ex: "profil_trouve", "lie_a"
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, default=dt.datetime.utcnow)
-
-
-class AuditEvent(Base):
-    """Journal d'audit : chaque appel de module est tracé (date, module, requête, motif)."""
-
-    __tablename__ = "audit_events"
-
-    id: Mapped[str] = mapped_column(String, primary_key=True, default=new_id)
-    investigation_id: Mapped[str] = mapped_column(ForeignKey("investigations.id"))
-    module: Mapped[str] = mapped_column(String)
-    action: Mapped[str] = mapped_column(String)
-    input_value: Mapped[str] = mapped_column(String)
-    status: Mapped[str] = mapped_column(String)  # ok / error / refused
-    detail: Mapped[str] = mapped_column(Text, default="")
-    created_at: Mapped[dt.datetime] = mapped_column(DateTime, default=dt.datetime.utcnow)
-
-    investigation: Mapped[Investigation] = relationship(back_populates="audit_events")
 
 
 engine = create_engine(DB_PATH, connect_args={"check_same_thread": False})

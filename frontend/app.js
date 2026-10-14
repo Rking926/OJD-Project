@@ -40,32 +40,48 @@ async function loadInvestigations() {
   }
 }
 
+const EXAMPLES = [
+  "cherche le pseudo johndoe42 sur les réseaux",
+  "reconnaissance du domaine exemple.com",
+  "l'email test@exemple.com a-t-il fuité ?",
+  "quels comptes existent pour cet email ?",
+];
+
+function renderWelcome() {
+  const chips = EXAMPLES.map(e =>
+    `<button class="chip" onclick="useExample('${escapeHtml(e).replace(/'/g, "\\'")}')">${escapeHtml(e)}</button>`
+  ).join("");
+  document.getElementById("transcript").innerHTML = `
+    <div class="welcome">
+      <b>✻ Nouveau chat</b>
+      <div class="sub dim">Décris ta recherche en langage naturel — l'assistant choisit les bons outils. Le chat se nomme tout seul.</div>
+      <div class="examples">${chips}</div>
+    </div>`;
+}
+
+// Remplit le champ avec un exemple et place le curseur, prêt à envoyer.
+function useExample(text) {
+  const ta = document.getElementById("prompt-input");
+  ta.value = text;
+  ta.focus();
+  autoGrow();
+}
+
 // Nouveau chat : on vide l'écran et on attend le premier message.
 // L'enregistrement est créé automatiquement à l'envoi du premier message.
 function newChat() {
   currentInvestigationId = null;
   const ta = document.getElementById("prompt-input");
-  ta.disabled = false;
   ta.value = "";
   ta.focus();
-  document.getElementById("composer-hint").textContent =
-    "Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne";
-  document.getElementById("transcript").innerHTML = `
-    <div class="welcome">
-      <b>✻ Nouveau chat</b>
-      <div class="dim">Explique ta recherche en langage naturel. Le chat se nomme tout seul.</div>
-    </div>`;
+  renderWelcome();
   loadInvestigations();
   renderEntities([]);
-  renderAudit([]);
 }
 
 async function selectInvestigation(id) {
   currentInvestigationId = id;
-  const ta = document.getElementById("prompt-input");
-  ta.disabled = false;
-  ta.focus();
-  document.getElementById("composer-hint").textContent = "Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne";
+  document.getElementById("prompt-input").focus();
   document.getElementById("transcript").innerHTML = "";
   await loadInvestigations();
   await refreshDetail();
@@ -75,7 +91,6 @@ async function refreshDetail() {
   if (!currentInvestigationId) return;
   const d = await api(`/investigations/${currentInvestigationId}`);
   renderEntities(d.entities);
-  renderAudit(d.audit);
 }
 
 // ---------- Transcript ----------
@@ -115,7 +130,7 @@ async function sendPromptText(text) {
     try {
       const inv = await api("/investigations", {
         method: "POST",
-        body: JSON.stringify({ title, reason: text.trim() }),
+        body: JSON.stringify({ title }),
       });
       currentInvestigationId = inv.id;
       document.getElementById("transcript").innerHTML = "";
@@ -149,6 +164,44 @@ ta.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendPromptText(ta.value); }
 });
 document.getElementById("send-btn").addEventListener("click", () => sendPromptText(ta.value));
+
+// ---------- Raccourcis clavier ----------
+
+function openHelp() { document.getElementById("help-dialog").showModal(); }
+
+function anyDialogOpen() {
+  return [...document.querySelectorAll("dialog")].some(d => d.open);
+}
+
+document.addEventListener("keydown", (e) => {
+  const el = document.activeElement;
+  const typing = el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+
+  // Échap : ferme le panneau résultats (les dialogs se ferment nativement).
+  if (e.key === "Escape") {
+    document.getElementById("drawer").classList.remove("open");
+    return;
+  }
+
+  // Ctrl/Cmd+K : nouveau chat, même en cours de frappe.
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+    e.preventDefault(); newChat(); return;
+  }
+
+  // Les raccourcis à touche unique ne s'activent pas pendant la frappe
+  // ni quand une fenêtre est ouverte.
+  if (typing || anyDialogOpen() || e.ctrlKey || e.metaKey || e.altKey) return;
+
+  switch (e.key) {
+    case "n": e.preventDefault(); newChat(); break;
+    case "k": e.preventDefault(); openCatalog(); break;
+    case "t": e.preventDefault(); openTools(); break;
+    case "r": e.preventDefault(); toggleDrawer(); break;
+    case ",": e.preventDefault(); openSettingsDialog(); break;
+    case "?": e.preventDefault(); openHelp(); break;
+    case "/": e.preventDefault(); document.getElementById("prompt-input").focus(); break;
+  }
+});
 
 // ---------- Voix (Web Speech API, local au navigateur) ----------
 
@@ -184,15 +237,61 @@ function renderEntities(entities) {
   }
 }
 
-function renderAudit(audit) {
-  const c = document.getElementById("audit");
-  c.innerHTML = audit && audit.length ? "" : '<div class="dim">aucun appel</div>';
-  for (const a of (audit || []).slice().reverse()) {
+// ---------- Mes outils (plugins) ----------
+
+async function openTools() {
+  document.getElementById("tools-dialog").showModal();
+  await renderTools();
+}
+
+async function renderTools() {
+  const listEl = document.getElementById("tools-list");
+  const sbEl = document.getElementById("sandbox-status");
+  try {
+    const sb = await api("/sandbox");
+    const iso = sb.isolated ? "✅ isolé" : "⚠ exécution directe (installe Docker pour isoler)";
+    sbEl.innerHTML = `Sandbox : <b>${sb.backend}</b> — ${iso} · périmètre ${sb.enforce_scope ? "imposé" : "libre"}`;
+  } catch { sbEl.textContent = ""; }
+
+  const tools = await api("/tools");
+  listEl.innerHTML = tools.length ? "" : '<div class="dim">aucun outil ajouté</div>';
+  for (const t of tools) {
     const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `<strong>${a.module}</strong> <span class="${a.status}">${a.status}</span><div class="dim">${escapeHtml(a.input_value)}</div><div class="dim" style="font-size:10px">${a.created_at}</div>`;
-    c.appendChild(div);
+    div.className = "cat-item";
+    const warn = t.binary_installed ? "" : ' <span class="error">binaire absent</span>';
+    div.innerHTML =
+      `<div><b>${escapeHtml(t.name)}</b> <span class="dim">${escapeHtml(t.category)}</span>` +
+      `${t.active ? ' <span class="dim">[actif]</span>' : ""}${warn}` +
+      `<div class="dim" style="font-size:11px">${escapeHtml(t.description)}</div>` +
+      `<div class="dim" style="font-size:10px">${escapeHtml(t.argv.join(" "))}</div></div>` +
+      `<button class="ghost" onclick="deleteTool('${encodeURIComponent(t.name)}')">supprimer</button>`;
+    listEl.appendChild(div);
   }
+}
+
+async function addTool() {
+  const err = document.getElementById("t-error");
+  err.textContent = "";
+  const body = {
+    name: document.getElementById("t-name").value.trim(),
+    description: document.getElementById("t-desc").value.trim(),
+    category: document.getElementById("t-cat").value.trim(),
+    argv: document.getElementById("t-argv").value.trim(),
+    active: document.getElementById("t-active").checked,
+  };
+  try {
+    await api("/tools", { method: "POST", body: JSON.stringify(body) });
+    document.getElementById("t-name").value = "";
+    document.getElementById("t-desc").value = "";
+    document.getElementById("t-cat").value = "";
+    document.getElementById("t-argv").value = "";
+    await renderTools();
+  } catch (e) { err.textContent = e.message; }
+}
+
+async function deleteTool(name) {
+  await api("/tools/" + name, { method: "DELETE" });
+  await renderTools();
 }
 
 // ---------- Catalogue ----------
@@ -234,6 +333,8 @@ async function openSettingsDialog() {
   document.getElementById("cfg-anthropic-model").value = cfg.anthropic_model;
   document.getElementById("cfg-anthropic-key").value = "";
   document.getElementById("cfg-anthropic-key").placeholder = cfg.anthropic_api_key || "sk-ant-…";
+  document.getElementById("cfg-hibp-key").value = "";
+  document.getElementById("cfg-hibp-key").placeholder = cfg.module_config.hibp_api_key || "clé HIBP…";
   document.getElementById("cfg-ig-session").value = "";
   document.getElementById("cfg-ig-session").placeholder = cfg.module_config.instagram_sessionid || "";
   document.getElementById("settings-dialog").showModal();
@@ -249,6 +350,8 @@ async function saveSettings() {
   };
   const key = document.getElementById("cfg-anthropic-key").value.trim();
   if (key) body.anthropic_api_key = key;
+  const hibp = document.getElementById("cfg-hibp-key").value.trim();
+  if (hibp) body.module_config.hibp_api_key = hibp;
   const ig = document.getElementById("cfg-ig-session").value.trim();
   if (ig) body.module_config.instagram_sessionid = ig;
   try {

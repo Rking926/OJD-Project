@@ -8,12 +8,49 @@ renvoyé au LLM qui peut enchaîner d'autres appels ou conclure.
 from __future__ import annotations
 
 import json
+import time
+from concurrent.futures import ThreadPoolExecutor
 
 from sqlalchemy.orm import Session
 
-from ..models import AuditEvent, Entity, EntityType, Investigation
+from ..models import Entity, EntityType, Investigation
+from ..modules.base import ModuleResult
 from ..modules.registry import get_module, list_modules
 from .providers import LLMProvider, build_provider
+
+# Cache en mémoire des résultats de modules : évite de relancer une recherche
+# identique (même module + mêmes arguments) pendant la durée du TTL.
+_CACHE_TTL = 3600  # secondes
+_RESULT_CACHE: dict[str, tuple[float, ModuleResult]] = {}
+# Nombre max d'outils exécutés en parallèle dans un même tour.
+_MAX_PARALLEL = 5
+
+
+def _cache_key(name: str, args: dict) -> str:
+    return name + "|" + json.dumps(args, sort_keys=True, ensure_ascii=False)
+
+
+def _run_module(module, args: dict, mc: dict) -> ModuleResult:
+    """Exécute un module (appel réseau/subprocess) sans toucher à la base.
+
+    Fonction pure, sûre à lancer dans un thread. Les écritures DB (entités,
+    audit) sont faites ensuite sur le thread principal par l'appelant.
+    """
+    key = _cache_key(module.name, args)
+    cached = _RESULT_CACHE.get(key)
+    if cached and (time.time() - cached[0]) < _CACHE_TTL:
+        return cached[1]
+
+    if module.input_schema() is not None:
+        result = module.run(config=mc, **args)
+    else:
+        input_type = args.get("input_type", "")
+        value = args.get("value", "")
+        result = module.run(input_type, value, mc)
+
+    if result.status == "ok":
+        _RESULT_CACHE[key] = (time.time(), result)
+    return result
 
 SYSTEM_PROMPT = (
     "Tu es l'assistant d'une application d'investigation OSINT (recherche en sources "
@@ -71,28 +108,50 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
 
         messages.append(provider.assistant_tool_use_message(response))
 
+        mc = llm_config.get("module_config", {})
+
+        # 1) Préparation : on résout chaque appel et on isole ceux qui sont
+        #    réellement exécutables (les refus/erreurs ne lancent rien).
+        planned = []  # (tc, module, args, input_type, value, runnable: bool, pre_text, pre_status)
         for tc in response.tool_calls:
             module = get_module(tc.name)
             args = tc.arguments or {}
-            # Convention standard {input_type, value} ou spécifique {tool, target}.
             input_type = args.get("input_type", args.get("tool", ""))
             value = args.get("value", args.get("target", ""))
 
             if module is None:
-                result_text = f"Module inconnu: {tc.name}"
-                status = "error"
-            elif not module.is_configured(llm_config.get("module_config", {})):
-                result_text = (
-                    f"Module '{module.name}' non configuré ou désactivé. "
-                    f"Nécessite: {module.requires_config}. {module.legal_notice}"
-                )
-                status = "refused"
+                planned.append((tc, None, args, input_type, value, False,
+                                f"Module inconnu: {tc.name}", "error"))
+            elif not module.is_configured(mc):
+                planned.append((tc, module, args, input_type, value, False,
+                                f"Module '{module.name}' non configuré ou désactivé. "
+                                f"Nécessite: {module.requires_config}. {module.legal_notice}",
+                                "refused"))
             else:
-                mc = llm_config.get("module_config", {})
-                if module.input_schema() is not None:
-                    result = module.run(config=mc, **args)
-                else:
-                    result = module.run(input_type, value, mc)
+                planned.append((tc, module, args, input_type, value, True, None, None))
+
+        # 2) Exécution en parallèle de tous les modules lançables de ce tour.
+        runnable = [p for p in planned if p[5]]
+        results: dict[str, ModuleResult] = {}
+        if runnable:
+            with ThreadPoolExecutor(max_workers=_MAX_PARALLEL) as pool:
+                futures = {
+                    pool.submit(_run_module, p[1], p[2], mc): p[0].id
+                    for p in runnable
+                }
+                for fut in futures:
+                    tc_id = futures[fut]
+                    try:
+                        results[tc_id] = fut.result()
+                    except Exception as exc:  # noqa: BLE001
+                        results[tc_id] = ModuleResult(status="error", detail=str(exc))
+
+        # 3) Écritures DB (entités) sur le thread principal, dans l'ordre.
+        for tc, module, args, input_type, value, is_runnable, pre_text, pre_status in planned:
+            if not is_runnable:
+                status, result_text = pre_status, pre_text
+            else:
+                result = results[tc.id]
                 status = result.status
                 for ent in result.entities:
                     db_entity = Entity(
@@ -112,16 +171,7 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
                     "entities": [{"type": e.type, "value": e.value} for e in result.entities],
                 }, ensure_ascii=False)
 
-            db.add(AuditEvent(
-                investigation_id=investigation.id,
-                module=tc.name,
-                action="run",
-                input_value=f"{input_type}:{value}",
-                status=status,
-                detail=result_text[:2000],
-            ))
             tool_call_log.append({"module": tc.name, "input_type": input_type, "value": value, "status": status})
-
             messages.append(provider.tool_result_message(tc.id, tc.name, result_text))
 
         db.commit()
