@@ -464,6 +464,61 @@ async function saveSettings() {
   } catch (e) { alert(e.message); }
 }
 
+// ---------- Globe 3D de fond (canvas, bleu -> vert, aucun asset externe) ----------
+(function () {
+  const cvs = document.getElementById("globe");
+  if (!cvs) return;
+  const ctx = cvs.getContext("2d");
+  let W, H, DPR;
+  function resize() {
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    W = cvs.width = Math.floor(innerWidth * DPR);
+    H = cvs.height = Math.floor(innerHeight * DPR);
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const pts = [], latN = 46, lonN = 92;
+  for (let i = 0; i <= latN; i++) {
+    const lat = (i / latN - 0.5) * Math.PI, cl = Math.cos(lat), sl = Math.sin(lat);
+    for (let j = 0; j < lonN; j++) {
+      const lon = (j / lonN) * Math.PI * 2;
+      pts.push([cl * Math.cos(lon), sl, cl * Math.sin(lon)]);
+    }
+  }
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tilt = -0.42, ct = Math.cos(tilt), st = Math.sin(tilt);
+  const mix = (a, b, t) => Math.round(a + (b - a) * t);
+
+  function frame(time) {
+    ctx.clearRect(0, 0, W, H);
+    const cx = W * 0.5, cy = H * 1.08, R = Math.min(W, H * 1.25) * 0.95;
+    const rot = reduce ? 0.6 : time * 0.00005;
+    const cr = Math.cos(rot), sr = Math.sin(rot);
+    const proj = new Array(pts.length);
+    for (let k = 0; k < pts.length; k++) {
+      const p = pts[k];
+      const x = p[0] * cr - p[2] * sr, z = p[0] * sr + p[2] * cr, y = p[1];
+      proj[k] = [x, y * ct - z * st, y * st + z * ct];
+    }
+    proj.sort((a, b) => a[2] - b[2]);
+    for (let m = 0; m < proj.length; m++) {
+      const q = proj[m], depth = (q[2] + 1) / 2;
+      const sx = cx + q[0] * R, sy = cy - q[1] * R;
+      if (sx < -20 || sx > W + 20 || sy > H + 20) continue;
+      const lat = (q[1] + 1) / 2;
+      const rr = mix(58, 46, lat), gg = mix(160, 230, lat), bb = mix(255, 166, lat);
+      const alpha = 0.08 + depth * 0.62;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha.toFixed(3)})`;
+      ctx.arc(sx, sy, (0.5 + depth * 1.8) * DPR, 0, 6.283);
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
 // ---------- Init ----------
 loadStats();
 newChat();
