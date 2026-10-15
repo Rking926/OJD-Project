@@ -27,7 +27,6 @@ from .memory_module import MemoryModule
 from .metasploit_module import MetasploitModule
 from .phone_module import PhoneModule
 from .sherlock_module import SherlockModule
-from .spiderfoot_module import SpiderFootModule
 from .theharvester_module import TheHarvesterModule
 from .toutatis_module import ToutatisModule
 from .user_command import UserCommandModule
@@ -48,7 +47,6 @@ _CORE: list[OsintModule] = [
     IpInfoModule(),
     XposedOrNotModule(),
     HibpModule(),
-    SpiderFootModule(),
     MemoryModule(),
     ToutatisModule(),
     ReconToolModule(),

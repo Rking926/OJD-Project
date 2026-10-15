@@ -16,7 +16,10 @@ import subprocess
 
 from .base import InputType, ModuleResult, ModuleResultEntity, OsintModule
 
-DEFAULT_TIMEOUT = 300
+DEFAULT_TIMEOUT = 180
+# Jeu de modules rapides, sans clé API (infra : DNS, certificats, netblocks/ASN).
+# Évite le scan « passif complet » qui lance 100+ modules et dépasse les délais.
+_SF_MODULES = "sfp_dnsresolve,sfp_crt,sfp_sslcert,sfp_ripe,sfp_dnscommonsrv"
 
 # Correspondance type d'événement SpiderFoot -> type d'entité OJD.
 _TYPE_MAP = {
@@ -53,7 +56,7 @@ class SpiderFootModule(OsintModule):
         if not binary:
             return ModuleResult(status="error", detail="SpiderFoot non installé.")
 
-        argv = [binary, "-s", target, "-u", "passive", "-o", "json", "-q", "-S", "2000"]
+        argv = [binary, "-s", target, "-m", _SF_MODULES, "-o", "json", "-q", "-S", "2000"]
         try:
             proc = subprocess.run(argv, capture_output=True, text=True, timeout=DEFAULT_TIMEOUT)
         except subprocess.TimeoutExpired:
