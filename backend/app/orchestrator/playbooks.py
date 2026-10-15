@@ -47,6 +47,9 @@ _SYNTHESIS_SYSTEM = (
 # Modules lourds/lents : on ne les lance que sur la cible initiale (depth 0),
 # pas sur chaque entité découverte, pour garder l'enquête rapide.
 _HEAVY = {"theharvester", "crtsh"}
+# Jamais lancés automatiquement : memory (outil de recoupement interactif) et
+# spiderfoot (scan très lent, à déclencher explicitement).
+_SKIP_IN_PLAYBOOK = {"memory", "spiderfoot"}
 
 
 def _osint_modules_for(type_value: str, mc: dict, depth: int = 0):
@@ -54,6 +57,8 @@ def _osint_modules_for(type_value: str, mc: dict, depth: int = 0):
     mods = []
     for m in list_modules():
         if m.input_schema() is not None:      # exclut metasploit/recon/outils perso
+            continue
+        if m.name in _SKIP_IN_PLAYBOOK:
             continue
         if type_value not in [t.value for t in getattr(m, "accepts", [])]:
             continue

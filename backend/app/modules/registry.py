@@ -16,14 +16,18 @@ from ..user_tools_store import load_tools
 from .base import OsintModule
 from .crtsh_module import CrtShModule
 from .dns_module import DnsModule
+from .github_module import GithubModule
+from .gravatar_module import GravatarModule
 from .hibp_module import HibpModule
 from .holehe_module import HoleheModule
 from .ipinfo_module import IpInfoModule
 from .kali_runner import ReconToolModule
 from .maigret_module import MaigretModule
+from .memory_module import MemoryModule
 from .metasploit_module import MetasploitModule
 from .phone_module import PhoneModule
 from .sherlock_module import SherlockModule
+from .spiderfoot_module import SpiderFootModule
 from .theharvester_module import TheHarvesterModule
 from .toutatis_module import ToutatisModule
 from .user_command import UserCommandModule
@@ -34,15 +38,19 @@ _CORE: list[OsintModule] = [
     SherlockModule(),
     MaigretModule(),
     HoleheModule(),
+    GithubModule(),
+    GravatarModule(),
     WhoisModule(),
     DnsModule(),
     CrtShModule(),
     TheHarvesterModule(),
     PhoneModule(),
     IpInfoModule(),
-    ToutatisModule(),
     XposedOrNotModule(),
     HibpModule(),
+    SpiderFootModule(),
+    MemoryModule(),
+    ToutatisModule(),
     ReconToolModule(),
     MetasploitModule(),
 ]
