@@ -165,6 +165,42 @@ ta.addEventListener("keydown", (e) => {
 });
 document.getElementById("send-btn").addEventListener("click", () => sendPromptText(ta.value));
 
+// ---------- Enquête autonome (playbook) ----------
+
+async function runPlaybook() {
+  const seed = ta.value.trim();
+  if (!seed) { ta.focus(); return; }
+  if (!currentInvestigationId) {
+    try {
+      const inv = await api("/investigations", {
+        method: "POST",
+        body: JSON.stringify({ title: "Enquête: " + seed.slice(0, 40) }),
+      });
+      currentInvestigationId = inv.id;
+      document.getElementById("transcript").innerHTML = "";
+      loadInvestigations();
+    } catch (e) { alert(e.message); return; }
+  }
+  addTurn("user", "🔎 Enquête complète sur : " + seed);
+  ta.value = ""; autoGrow();
+  const thinking = addTurn("assistant", "Enquête autonome en cours — je lance tous les outils pertinents et je recoupe");
+  thinking.classList.add("thinking");
+  try {
+    const r = await api("/playbook", {
+      method: "POST",
+      body: JSON.stringify({ investigation_id: currentInvestigationId, seed_value: seed }),
+    });
+    thinking.remove();
+    addToolTrace(r.tool_calls);
+    addTurn("assistant", r.reply || "(pas de dossier)");
+    await refreshDetail();
+  } catch (e) {
+    thinking.classList.remove("thinking");
+    thinking.innerHTML = `<span class="who">✻ ojd</span>\n<span class="err">Erreur : ${escapeHtml(e.message)}</span>`;
+  }
+}
+document.getElementById("pb-btn").addEventListener("click", runPlaybook);
+
 // ---------- Raccourcis clavier ----------
 
 function openHelp() { document.getElementById("help-dialog").showModal(); }

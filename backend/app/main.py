@@ -227,6 +227,31 @@ def api_prompt(body: PromptIn):
         db.close()
 
 
+# ---------- Enquête autonome (playbook) ----------
+
+class PlaybookIn(BaseModel):
+    investigation_id: str
+    seed_value: str
+    seed_type: str = ""  # vide => détecté automatiquement
+
+
+@app.post("/api/playbook")
+def api_playbook(body: PlaybookIn):
+    from .orchestrator.playbooks import run_full_investigation
+    db = SessionLocal()
+    try:
+        inv = db.get(Investigation, body.investigation_id)
+        if not inv:
+            raise HTTPException(404, "Investigation introuvable.")
+        config = load_config()
+        try:
+            return run_full_investigation(db, inv, body.seed_value, body.seed_type, config)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
+    finally:
+        db.close()
+
+
 # ---------- Frontend statique ----------
 
 _frontend_dir = Path(__file__).resolve().parent.parent.parent / "frontend"
