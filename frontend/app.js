@@ -464,56 +464,66 @@ async function saveSettings() {
   } catch (e) { alert(e.message); }
 }
 
-// ---------- Globe 3D de fond (canvas, bleu -> vert, aucun asset externe) ----------
+// ---------- Fond ASCII dégradé (canvas vanilla, aucune dépendance) ----------
+// Effet "horizon" : caractères ASCII dessinés en dégradé bleu, animés et
+// réactifs à la souris. Config inspirée de GradientASCII (colors/characters).
 (function () {
   const cvs = document.getElementById("globe");
   if (!cvs) return;
   const ctx = cvs.getContext("2d");
-  let W, H, DPR;
+  const COLORS = [[30, 63, 216], [246, 248, 255], [165, 216, 255], [56, 189, 248]];
+  const CHARS = " =+xX0S8#@";
+  const CELL = 18, DENSITY = 0.8;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, DPR, cols, rows;
+  let mx = 0.5, my = 0.5;
+
   function resize() {
-    DPR = Math.min(2, window.devicePixelRatio || 1);
+    DPR = Math.min(1.5, window.devicePixelRatio || 1);
     W = cvs.width = Math.floor(innerWidth * DPR);
     H = cvs.height = Math.floor(innerHeight * DPR);
+    cols = Math.ceil(innerWidth / CELL);
+    rows = Math.ceil(innerHeight / CELL);
+    ctx.font = `${Math.round(CELL * DPR)}px var(--mono), monospace`;
+    ctx.textBaseline = "top";
   }
   resize();
   window.addEventListener("resize", resize);
+  window.addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; });
 
-  const pts = [], latN = 46, lonN = 92;
-  for (let i = 0; i <= latN; i++) {
-    const lat = (i / latN - 0.5) * Math.PI, cl = Math.cos(lat), sl = Math.sin(lat);
-    for (let j = 0; j < lonN; j++) {
-      const lon = (j / lonN) * Math.PI * 2;
-      pts.push([cl * Math.cos(lon), sl, cl * Math.sin(lon)]);
-    }
+  function colorAt(t) {
+    t = Math.max(0, Math.min(0.999, t));
+    const n = COLORS.length - 1, f = t * n, i = Math.floor(f), k = f - i;
+    const a = COLORS[i], b = COLORS[i + 1];
+    return `rgb(${(a[0] + (b[0] - a[0]) * k) | 0},${(a[1] + (b[1] - a[1]) * k) | 0},${(a[2] + (b[2] - a[2]) * k) | 0})`;
   }
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const tilt = -0.42, ct = Math.cos(tilt), st = Math.sin(tilt);
-  const mix = (a, b, t) => Math.round(a + (b - a) * t);
 
+  let last = 0;
   function frame(time) {
+    if (time - last < 32) { requestAnimationFrame(frame); return; } // ~30 fps
+    last = time;
     ctx.clearRect(0, 0, W, H);
-    const cx = W * 0.5, cy = H * 1.08, R = Math.min(W, H * 1.25) * 0.95;
-    const rot = reduce ? 0.6 : time * 0.00005;
-    const cr = Math.cos(rot), sr = Math.sin(rot);
-    const proj = new Array(pts.length);
-    for (let k = 0; k < pts.length; k++) {
-      const p = pts[k];
-      const x = p[0] * cr - p[2] * sr, z = p[0] * sr + p[2] * cr, y = p[1];
-      proj[k] = [x, y * ct - z * st, y * st + z * ct];
+    const t = reduce ? 0 : time * 0.0004;
+    const stepX = CELL * DPR, stepY = CELL * DPR;
+    for (let gy = 0; gy < rows; gy++) {
+      const ny = gy / rows;
+      const horizon = 1 - Math.min(1, Math.abs(ny - 0.58) / 0.5); // bande lumineuse
+      for (let gx = 0; gx < cols; gx++) {
+        const nx = gx / cols;
+        const flow = 0.5 + 0.5 * Math.sin(nx * 6 + t * 2 + Math.sin(ny * 5 - t)) * Math.cos(ny * 7 - t * 1.3);
+        const mdist = Math.hypot(nx - mx, (ny - my) * 1.2);
+        const mouse = Math.max(0, 0.35 - mdist) * 1.6; // halo sous le curseur
+        let v = horizon * 0.72 + flow * 0.5 * DENSITY + mouse;
+        v = Math.max(0, Math.min(1, v));
+        const ci = Math.floor(v * (CHARS.length - 1) + 0.0001);
+        const ch = CHARS[ci];
+        if (ch === " ") continue;
+        ctx.globalAlpha = 0.18 + v * 0.55;
+        ctx.fillStyle = colorAt(v);
+        ctx.fillText(ch, gx * stepX, gy * stepY);
+      }
     }
-    proj.sort((a, b) => a[2] - b[2]);
-    for (let m = 0; m < proj.length; m++) {
-      const q = proj[m], depth = (q[2] + 1) / 2;
-      const sx = cx + q[0] * R, sy = cy - q[1] * R;
-      if (sx < -20 || sx > W + 20 || sy > H + 20) continue;
-      const lat = (q[1] + 1) / 2;
-      const rr = mix(58, 46, lat), gg = mix(160, 230, lat), bb = mix(255, 166, lat);
-      const alpha = 0.08 + depth * 0.62;
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(${rr},${gg},${bb},${alpha.toFixed(3)})`;
-      ctx.arc(sx, sy, (0.5 + depth * 1.8) * DPR, 0, 6.283);
-      ctx.fill();
-    }
+    ctx.globalAlpha = 1;
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
