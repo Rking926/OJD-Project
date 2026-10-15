@@ -14,12 +14,17 @@ from __future__ import annotations
 
 from ..user_tools_store import load_tools
 from .base import OsintModule
+from .crtsh_module import CrtShModule
+from .dns_module import DnsModule
 from .hibp_module import HibpModule
 from .holehe_module import HoleheModule
+from .ipinfo_module import IpInfoModule
 from .kali_runner import ReconToolModule
 from .maigret_module import MaigretModule
 from .metasploit_module import MetasploitModule
+from .phone_module import PhoneModule
 from .sherlock_module import SherlockModule
+from .theharvester_module import TheHarvesterModule
 from .toutatis_module import ToutatisModule
 from .user_command import UserCommandModule
 from .whois_module import WhoisModule
@@ -30,6 +35,11 @@ _CORE: list[OsintModule] = [
     MaigretModule(),
     HoleheModule(),
     WhoisModule(),
+    DnsModule(),
+    CrtShModule(),
+    TheHarvesterModule(),
+    PhoneModule(),
+    IpInfoModule(),
     ToutatisModule(),
     XposedOrNotModule(),
     HibpModule(),
