@@ -473,7 +473,7 @@ async function saveSettings() {
   const ctx = cvs.getContext("2d");
   const COLORS = [[30, 63, 216], [246, 248, 255], [165, 216, 255], [56, 189, 248]];
   const CHARS = " =+xX0S8#@";
-  const CELL = 18, DENSITY = 0.8;
+  const CELL = 13, DENSITY = 0.85;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let W, H, DPR, cols, rows;
   let mx = 0.5, my = 0.5;
@@ -484,7 +484,7 @@ async function saveSettings() {
     H = cvs.height = Math.floor(innerHeight * DPR);
     cols = Math.ceil(innerWidth / CELL);
     rows = Math.ceil(innerHeight / CELL);
-    ctx.font = `${Math.round(CELL * DPR)}px var(--mono), monospace`;
+    ctx.font = `${Math.round((CELL + 1) * DPR)}px "DejaVu Sans Mono", ui-monospace, monospace`;
     ctx.textBaseline = "top";
   }
   resize();
