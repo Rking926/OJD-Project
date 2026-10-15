@@ -268,8 +268,11 @@ function renderEntities(entities) {
     const div = document.createElement("div");
     div.className = "card";
     let extra = "";
-    if (e.extra && e.extra.output) extra = `<div class="dim" style="margin-top:4px;white-space:pre-wrap;max-height:120px;overflow:auto">${escapeHtml(e.extra.output.slice(0, 1500))}</div>`;
-    div.innerHTML = `<div class="t">${e.type}</div><div>${escapeHtml(e.value)}</div><div class="dim">via ${e.source_module}</div>${extra}`;
+    if (e.extra && e.extra.output) extra = `<div class="dim" style="margin-top:6px;white-space:pre-wrap;max-height:120px;overflow:auto;font-family:var(--mono)">${escapeHtml(e.extra.output.slice(0, 1500))}</div>`;
+    const conf = (e.confidence >= 0.9) ? '<span class="badge high">fiable</span>' : '<span class="badge med">à vérifier</span>';
+    div.innerHTML = `<div class="t">${escapeHtml(e.type)}</div>`
+      + `<div style="margin:4px 0;word-break:break-all;font-family:var(--mono)">${escapeHtml(e.value)}</div>`
+      + `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="badge">${escapeHtml(e.source_module)}</span>${conf}</div>${extra}`;
     c.appendChild(div);
   }
 }

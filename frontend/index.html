@@ -4,21 +4,49 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>OJD OSINT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #1a1816; --bg2: #211e1b; --panel: #211e1b; --border: #3a352f;
-    --text: #e8e3da; --muted: #9a9088; --accent: #d97757; --accent2: #cc785c;
-    --ok: #7fb069; --warn: #e0a458; --err: #e05c5c; --mono: "DejaVu Sans Mono", "SF Mono", Menlo, Consolas, monospace;
+    --bg: #04060e; --bg2: rgba(12,17,30,.70); --panel: rgba(12,17,30,.94); --border: #1e2840;
+    --text: #eef1f8; --muted: #899ab8; --accent: #ff3b4e; --accent2: #ff6b78; --cool: #5aa2ff;
+    --ok: #5fd38a; --warn: #f0b84a; --err: #ff5c6c;
+    --mono: "DejaVu Sans Mono", "SF Mono", Menlo, Consolas, monospace;
+    --ui: "Space Grotesk", system-ui, -apple-system, sans-serif;
   }
   * { box-sizing: border-box; }
-  body { margin:0; font-family: var(--mono); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; }
+  body { margin:0; font-family: var(--ui); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; }
+
+  /* Fond cosmique original : lueur de Terre + starfield + fils de connexion */
+  .cosmos { position: fixed; inset: 0; z-index: -2; overflow: hidden; background:
+      radial-gradient(1300px 520px at 50% 122%, rgba(90,162,255,.30), transparent 62%),
+      radial-gradient(1300px 340px at 50% 132%, rgba(170,215,255,.40), transparent 56%),
+      radial-gradient(1000px 900px at 82% -12%, rgba(44,74,150,.22), transparent 60%),
+      #04060e; }
+  .cosmos::before { content:""; position:absolute; inset:0; opacity:.75; background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 26% 42%, #cdd8ff, transparent),
+      radial-gradient(1.5px 1.5px at 38% 12%, #fff, transparent), radial-gradient(1px 1px at 52% 32%, #fff, transparent),
+      radial-gradient(1px 1px at 63% 8%, #bcd0ff, transparent), radial-gradient(1.5px 1.5px at 72% 24%, #fff, transparent),
+      radial-gradient(1px 1px at 84% 14%, #fff, transparent), radial-gradient(1px 1px at 91% 38%, #cdd8ff, transparent),
+      radial-gradient(1px 1px at 8% 60%, #fff, transparent), radial-gradient(1.5px 1.5px at 20% 72%, #fff, transparent),
+      radial-gradient(1px 1px at 44% 64%, #bcd0ff, transparent), radial-gradient(1px 1px at 58% 78%, #fff, transparent),
+      radial-gradient(1px 1px at 76% 66%, #fff, transparent), radial-gradient(1px 1px at 88% 82%, #cdd8ff, transparent); }
+  .cosmos i { position:absolute; width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px 2px rgba(255,59,78,.75); }
+  .cosmos i:nth-of-type(1){ left:27%; top:45%; } .cosmos i:nth-of-type(2){ left:74%; top:39%; } .cosmos i:nth-of-type(3){ left:50%; top:57%; }
+  .cosmos b { position:absolute; top:0; width:1px; height:48%; background:linear-gradient(transparent, rgba(180,200,255,.22)); }
+  .cosmos b:nth-of-type(1){ left:27%; } .cosmos b:nth-of-type(2){ left:50%; height:40%; } .cosmos b:nth-of-type(3){ left:74%; }
+
+  .glass { background: var(--bg2); backdrop-filter: blur(12px) saturate(1.2); -webkit-backdrop-filter: blur(12px) saturate(1.2); }
+  ::selection { background: rgba(255,59,78,.35); }
+  ::-webkit-scrollbar { width:10px; height:10px; } ::-webkit-scrollbar-thumb { background:#1e2840; border-radius:6px; } ::-webkit-scrollbar-track { background:transparent; }
   .layout { display: grid; grid-template-columns: 248px 1fr; height: 100vh; }
 
-  .sidebar { background: var(--bg2); border-right: 1px solid var(--border); padding: 14px; overflow-y: auto; display:flex; flex-direction:column; }
-  .brand { color: var(--accent); font-weight: 700; font-size: 14px; margin-bottom: 2px; }
-  .brand .star { animation: spin 4s linear infinite; display: inline-block; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .tagline { color: var(--muted); font-size: 11px; margin-bottom: 16px; }
+  .sidebar { background: var(--bg2); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); border-right: 1px solid var(--border); padding: 16px 14px; overflow-y: auto; display:flex; flex-direction:column; }
+  .brand { font-family: var(--ui); color: var(--text); font-weight: 700; font-size: 17px; letter-spacing:.14em; text-transform:uppercase; margin-bottom: 3px; display:flex; align-items:center; gap:9px; }
+  .brand .star { width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px 2px rgba(255,59,78,.7); font-size:0; animation: twinkle 2.4s ease-in-out infinite; }
+  @keyframes twinkle { 50% { opacity:.4; box-shadow:0 0 6px 1px rgba(255,59,78,.5); } }
+  .tagline { color: var(--muted); font-size: 11px; letter-spacing:.04em; margin-bottom: 18px; }
   .side-section { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; margin: 16px 0 6px; }
   .side-btn { display:flex; align-items:center; justify-content:space-between; width:100%; text-align:left; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; cursor: pointer; font-family: var(--mono); font-size: 12px; margin-bottom: 6px; transition: border-color .12s, background .12s; }
   .side-btn:hover { border-color: var(--accent); background: var(--bg); }
@@ -50,8 +78,8 @@
   .thinking::after { content:"▋"; animation: pulse 1s steps(2) infinite; }
 
   .composer { padding: 14px 28px 20px; border-top: 1px solid var(--border); }
-  .composer .box { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; display: flex; align-items: flex-end; gap: 8px; background: var(--bg2); transition: border-color .12s; }
-  .composer .box:focus-within { border-color: var(--accent); }
+  .composer .box { border: 1px solid var(--border); border-radius: 14px; padding: 11px 13px; display: flex; align-items: flex-end; gap: 8px; background: var(--bg2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: border-color .15s, box-shadow .15s; }
+  .composer .box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,59,78,.14); }
   .composer .prompt-char { color: var(--accent); font-weight: 700; padding-bottom: 2px; }
   .composer textarea { flex:1; background: transparent; border: none; color: var(--text); font-family: var(--mono); font-size: 13px; resize: none; height: 22px; max-height: 160px; outline: none; }
   .icon-btn { background: transparent; border: none; color: var(--muted); cursor: pointer; font-size: 15px; padding: 2px 6px; border-radius:6px; }
@@ -61,24 +89,31 @@
   .hint { color: var(--muted); font-size: 11px; margin-top: 8px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
   .hint kbd { border-bottom-width:1px; }
 
-  .drawer { position: fixed; top:0; right:0; width: 380px; height: 100vh; background: var(--bg2); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; transform: translateX(100%); transition: transform .2s; z-index: 50; }
+  .drawer { position: fixed; top:0; right:0; width: 380px; height: 100vh; background: var(--panel); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); border-left: 1px solid var(--border); padding: 16px; overflow-y: auto; transform: translateX(100%); transition: transform .25s cubic-bezier(.4,0,.2,1); z-index: 50; }
   .drawer.open { transform: translateX(0); }
   .drawer h3 { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .1em; margin: 4px 0 10px; }
   .card { border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; font-size: 12px; }
   .card .t { color: var(--accent); font-size: 10px; text-transform: uppercase; }
   .drawer-close { float:right; }
 
-  dialog { background: var(--bg2); color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 20px; width: 460px; max-width: 92vw; font-family: var(--mono); }
-  dialog::backdrop { background: rgba(0,0,0,.65); }
-  dialog h2 { font-size: 14px; margin-top: 0; color: var(--accent); }
+  dialog { background: var(--panel); backdrop-filter: blur(16px) saturate(1.2); -webkit-backdrop-filter: blur(16px) saturate(1.2); color: var(--text); border: 1px solid var(--border); border-radius: 16px; padding: 22px; width: 460px; max-width: 92vw; font-family: var(--ui); box-shadow: 0 24px 60px rgba(0,0,0,.6); }
+  dialog::backdrop { background: rgba(2,4,10,.72); backdrop-filter: blur(2px); }
+  dialog h2 { font-size: 15px; margin-top: 0; color: var(--text); letter-spacing:.04em; }
+  dialog h2::before { content:"◈ "; color: var(--accent); }
   .field { margin-bottom: 10px; }
   .field label { font-size: 11px; color: var(--muted); display:block; margin-bottom: 4px; }
   input, textarea, select { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 7px 9px; font-size: 12px; width: 100%; font-family: var(--mono); }
   input:focus, textarea:focus, select:focus { outline:none; border-color:var(--accent); }
   .row-end { display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
-  button.primary { background: var(--accent); color: #1a1816; border: none; border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--mono); font-weight: 600; }
-  button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 7px 14px; cursor: pointer; font-family: var(--mono); }
+  button.primary { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-family: var(--ui); font-weight: 600; letter-spacing:.02em; box-shadow: 0 4px 16px rgba(255,59,78,.3); transition: transform .1s, box-shadow .15s; }
+  button.primary:hover { box-shadow: 0 6px 22px rgba(255,59,78,.45); transform: translateY(-1px); }
+  button.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px; cursor: pointer; font-family: var(--ui); }
+  button.ghost:hover { border-color: var(--muted); }
   .legal { font-size: 10px; color: var(--warn); margin-top: 4px; }
+  /* Badge de fiabilité / source */
+  .badge { display:inline-block; font-size:9px; padding:2px 7px; border-radius:20px; letter-spacing:.03em; border:1px solid var(--border); color:var(--muted); }
+  .badge.high { background:rgba(95,211,138,.14); color:var(--ok); border-color:transparent; }
+  .badge.med { background:rgba(240,184,74,.14); color:var(--warn); border-color:transparent; }
 
   /* Fiche raccourcis */
   .sc-grid { display:grid; grid-template-columns: auto 1fr; gap: 8px 14px; align-items:center; margin-top:6px; }
@@ -102,6 +137,7 @@
 </style>
 </head>
 <body>
+<div class="cosmos"><i></i><i></i><i></i><b></b><b></b><b></b></div>
 <div class="layout">
   <div class="sidebar">
     <div class="brand"><span class="star">✻</span> OJD OSINT</div>
