@@ -7,6 +7,7 @@ renvoyé au LLM qui peut enchaîner d'autres appels ou conclure.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import time
@@ -20,22 +21,41 @@ from ..modules.registry import get_module, list_modules
 from .providers import LLMProvider, build_provider
 
 # Cache en mémoire des résultats de modules : évite de relancer une recherche
-# identique (même module + mêmes arguments) pendant la durée du TTL.
+# identique (même module + mêmes arguments + même config) pendant la durée du TTL.
 _CACHE_TTL = 3600  # secondes
+_CACHE_MAX = 500   # nombre max d'entrées gardées (évite que le cache gonfle sans fin)
 _RESULT_CACHE: dict[str, tuple[float, ModuleResult]] = {}
 # Nombre max d'outils exécutés en parallèle dans un même tour.
 _MAX_PARALLEL = 5
 
+def _cache_key(name: str, args: dict, mc: dict) -> str:
+    # On inclut la config des modules (mc) dans la clé : si l'utilisateur change
+    # une clé API ou un sessionid, on ne ressert pas un ancien résultat « raté ».
+    # Hash SHA-256 pour ne pas stocker de secrets en clair dans la clé.
+    raw = json.dumps({"n": name, "a": args, "c": mc}, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
-def _cache_key(name: str, args: dict) -> str:
-    return name + "|" + json.dumps(args, sort_keys=True, ensure_ascii=False)
+def _cache_get(key: str) -> ModuleResult | None:
+    hit = _RESULT_CACHE.get(key)
+    if hit is None:
+        return None
+    if (time.time() - hit[0]) < _CACHE_TTL:
+        return hit[1]
+    _RESULT_CACHE.pop(key, None)  # expiré : on nettoie au passage
+    return None
 
+def _cache_put(key: str, result: ModuleResult) -> None:
+    # Si le cache est plein, on purge d'abord les entrées les plus anciennes.
+    if len(_RESULT_CACHE) >= _CACHE_MAX:
+        oldest = sorted(_RESULT_CACHE, key=lambda k: _RESULT_CACHE[k][0])
+        for k in oldest[: max(1, _CACHE_MAX // 4)]:
+            _RESULT_CACHE.pop(k, None)
+    _RESULT_CACHE[key] = (time.time(), result)
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _DOMAIN_RE = re.compile(r"^(?!-)[A-Za-z0-9-]{1,63}(?:\.[A-Za-z0-9-]{1,63})+$")
 _IP_RE = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
 _PHONE_RE = re.compile(r"^\+?[0-9\s().-]{6,}$")
-
 
 def _infer_type(value: str) -> str:
     v = value.strip()
@@ -48,7 +68,6 @@ def _infer_type(value: str) -> str:
     if _PHONE_RE.match(v) and sum(c.isdigit() for c in v) >= 6:
         return "phone"
     return "username"
-
 
 def _normalize_std_args(module, args: dict) -> tuple[str, str]:
     """Corrige les arguments mal remplis par le LLM (fréquent avec un petit
@@ -78,7 +97,6 @@ def _normalize_std_args(module, args: dict) -> tuple[str, str]:
             it = inferred if inferred in accepts else accepts[0]
     return it, value
 
-
 def _run_module(module, args: dict, mc: dict) -> ModuleResult:
     """Exécute un module (appel réseau/subprocess) sans toucher à la base.
 
@@ -86,19 +104,19 @@ def _run_module(module, args: dict, mc: dict) -> ModuleResult:
     audit) sont faites ensuite sur le thread principal par l'appelant.
     """
     # Clé de cache sur les arguments EFFECTIFS (normalisés pour les modules
-    # standards) : deux appels logiquement identiques mais aux arguments bruts
-    # différents (fréquent avec un LLM) tapent alors le même cache -> on évite
-    # de relancer le même outil plusieurs fois dans une enquête.
+    # standards) + la config des modules : deux appels logiquement identiques
+    # mais aux arguments bruts différents (fréquent avec un LLM) tapent alors le
+    # même cache -> on évite de relancer le même outil plusieurs fois.
     is_custom = module.input_schema() is not None
     if is_custom:
-        key = _cache_key(module.name, args)
+        key = _cache_key(module.name, args, mc)
     else:
         input_type, value = _normalize_std_args(module, args)
-        key = _cache_key(module.name, {"input_type": input_type, "value": value})
+        key = _cache_key(module.name, {"input_type": input_type, "value": value}, mc)
 
-    cached = _RESULT_CACHE.get(key)
-    if cached and (time.time() - cached[0]) < _CACHE_TTL:
-        return cached[1]
+    cached = _cache_get(key)
+    if cached is not None:
+        return cached
 
     if is_custom:
         result = module.run(config=mc, **args)
@@ -106,7 +124,7 @@ def _run_module(module, args: dict, mc: dict) -> ModuleResult:
         result = module.run(input_type, value, mc)
 
     if result.status == "ok":
-        _RESULT_CACHE[key] = (time.time(), result)
+        _cache_put(key, result)
     return result
 
 SYSTEM_PROMPT = (
@@ -137,7 +155,6 @@ SYSTEM_PROMPT = (
 
 MAX_TOOL_ROUNDS = 8
 
-
 def _tools_schema() -> list[dict]:
     schema = []
     for m in list_modules():
@@ -155,7 +172,6 @@ def _tools_schema() -> list[dict]:
             },
         })
     return schema
-
 
 def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_config: dict) -> dict:
     """Exécute un prompt utilisateur dans le contexte d'une investigation.
@@ -302,7 +318,6 @@ def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_confi
         "new_entities": [_entity_to_dict(e) for e in new_entities],
         "tool_calls": tool_call_log,
     }
-
 
 def _entity_to_dict(e: Entity) -> dict:
     return {

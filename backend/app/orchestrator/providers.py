@@ -9,20 +9,17 @@ import json
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-
 @dataclass
 class ToolCall:
     id: str
     name: str
     arguments: dict
 
-
 @dataclass
 class LLMResponse:
     text: str
     tool_calls: list[ToolCall]
     stop_reason: str  # "tool_use" | "end" | "error"
-
 
 class LLMProvider(ABC):
     @abstractmethod
@@ -36,7 +33,6 @@ class LLMProvider(ABC):
     @abstractmethod
     def assistant_tool_use_message(self, response: LLMResponse) -> dict:
         raise NotImplementedError
-
 
 class AnthropicProvider(LLMProvider):
     def __init__(self, api_key: str, model: str = "claude-sonnet-4-5"):
@@ -86,7 +82,6 @@ class AnthropicProvider(LLMProvider):
         for tc in response.tool_calls:
             blocks.append({"type": "tool_use", "id": tc.id, "name": tc.name, "input": tc.arguments})
         return {"role": "assistant", "content": blocks}
-
 
 class OllamaProvider(LLMProvider):
     """Fournisseur local via Ollama (ex: llama3.1, qwen2.5) — pas de données envoyées à l'extérieur."""
@@ -149,11 +144,24 @@ class OllamaProvider(LLMProvider):
         return LLMResponse(text=text, tool_calls=tool_calls, stop_reason=stop_reason)
 
     def tool_result_message(self, tool_call_id: str, name: str, content: str) -> dict:
-        return {"role": "tool", "content": content}
+        # Ollama veut le nom de l'outil sur le message de résultat (role "tool")
+        # pour corréler le résultat à l'appel correspondant.
+        return {"role": "tool", "tool_name": name, "content": content}
 
     def assistant_tool_use_message(self, response: LLMResponse) -> dict:
-        return {"role": "assistant", "content": response.text}
-
+        # IMPORTANT : on doit renvoyer les tool_calls dans le message assistant,
+        # sinon Ollama reçoit un résultat d'outil « orphelin » (sans l'appel qui
+        # l'a provoqué) et le modèle oublie le contexte / relance les mêmes outils.
+        msg: dict = {"role": "assistant", "content": response.text or ""}
+        if response.tool_calls:
+            msg["tool_calls"] = [
+                {
+                    "type": "function",
+                    "function": {"name": tc.name, "arguments": tc.arguments},
+                }
+                for tc in response.tool_calls
+            ]
+        return msg
 
 def build_provider(config: dict) -> LLMProvider:
     provider = config.get("llm_provider", "anthropic")
