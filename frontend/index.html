@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Geist+Mono:wght@300&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="GradientASCII.css">
+<link rel="stylesheet" href="GradientASCII.css?v=2">
 <style>
   :root {
     --bg: #05080f; --bg2: rgba(10,16,28,.66); --panel: rgba(10,16,28,.92); --border: #1b2740;
@@ -20,20 +20,8 @@
   * { box-sizing: border-box; }
   body { margin:0; font-family: var(--ui); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; }
 
-  /* Fond : lueur bleu-vert + starfield + GradientASCII (React Bits, WebGL2), derrière l'app */
-  .bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background:
-      radial-gradient(1200px 560px at 50% 116%, rgba(46,230,166,.16), transparent 60%),
-      radial-gradient(1200px 520px at 50% 122%, rgba(58,160,255,.20), transparent 62%),
-      radial-gradient(1000px 900px at 80% -10%, rgba(40,80,150,.16), transparent 60%),
-      #05080f; }
-  .bg::before { content:""; position:absolute; inset:0; opacity:.8; background-image:
-      radial-gradient(1.4px 1.4px at 12% 18%, #fff, transparent), radial-gradient(1px 1px at 26% 42%, #cfe4ff, transparent),
-      radial-gradient(1.4px 1.4px at 38% 12%, #fff, transparent), radial-gradient(1px 1px at 52% 30%, #fff, transparent),
-      radial-gradient(1px 1px at 63% 8%, #bfeaff, transparent), radial-gradient(1.4px 1.4px at 72% 22%, #fff, transparent),
-      radial-gradient(1px 1px at 84% 14%, #fff, transparent), radial-gradient(1px 1px at 91% 36%, #cfe4ff, transparent),
-      radial-gradient(1px 1px at 8% 58%, #fff, transparent), radial-gradient(1.4px 1.4px at 20% 70%, #fff, transparent),
-      radial-gradient(1px 1px at 44% 62%, #bfeaff, transparent), radial-gradient(1px 1px at 58% 76%, #fff, transparent),
-      radial-gradient(1px 1px at 76% 64%, #fff, transparent), radial-gradient(1px 1px at 88% 80%, #cfe4ff, transparent); }
+  /* Fond : noir pur + GradientASCII (React Bits, WebGL2), comme la démo du site */
+  .bg { position: fixed; inset: 0; z-index: -2; background: #000; }
   #ascii-bg { position: fixed; inset: 0; width:100%; height:100%; z-index:-1; pointer-events:none; }
 
   .glass { background: var(--bg2); backdrop-filter: blur(12px) saturate(1.2); -webkit-backdrop-filter: blur(12px) saturate(1.2); }
@@ -61,13 +49,14 @@
 
   .main { display: flex; flex-direction: column; overflow: hidden; }
   .transcript { flex: 1; overflow-y: auto; padding: 20px 28px; }
-  .welcome { border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px; margin-bottom: 20px; color: var(--muted); }
+  .welcome { border: 1px solid var(--border); border-radius: 10px; padding: 18px 18px; margin-bottom: 20px; color: var(--muted); background: var(--bg2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .welcome b { color: var(--accent); font-size:14px; }
   .welcome .sub { margin-top:4px; }
   .examples { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
   .chip { border:1px solid var(--border); border-radius:16px; padding:6px 12px; font-size:11px; color:var(--muted); cursor:pointer; background:transparent; font-family:var(--mono); transition: all .12s; }
   .chip:hover { border-color:var(--accent); color:var(--text); background:var(--bg); }
-  .turn { margin-bottom: 14px; white-space: pre-wrap; }
+  /* Bulles en verre : le texte reste lisible sur la partie claire du fond */
+  .turn { margin-bottom: 10px; white-space: pre-wrap; padding: 10px 14px; border-radius: 10px; background: var(--bg2); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .turn .who { color: var(--accent); }
   .turn.user .who { color: var(--text); }
   .turn.tool { color: var(--muted); font-size: 12px; }
@@ -263,7 +252,7 @@
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.2/cytoscape.min.js"></script>
-<script src="GradientASCII.js"></script>
-<script src="app.js"></script>
+<script src="GradientASCII.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
