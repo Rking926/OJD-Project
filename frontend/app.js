@@ -61,19 +61,16 @@ function renderWelcome() {
 
 // Remplit le champ avec un exemple et place le curseur, prêt à envoyer.
 function useExample(text) {
-  const ta = document.getElementById("prompt-input");
-  ta.value = text;
-  ta.focus();
-  autoGrow();
+  setPrompt(text);
+  focusPrompt();
 }
 
 // Nouveau chat : on vide l'écran et on attend le premier message.
 // L'enregistrement est créé automatiquement à l'envoi du premier message.
 function newChat() {
   currentInvestigationId = null;
-  const ta = document.getElementById("prompt-input");
-  ta.value = "";
-  ta.focus();
+  setPrompt("");
+  focusPrompt();
   renderWelcome();
   loadInvestigations();
   renderEntities([]);
@@ -81,7 +78,7 @@ function newChat() {
 
 async function selectInvestigation(id) {
   currentInvestigationId = id;
-  document.getElementById("prompt-input").focus();
+  focusPrompt();
   document.getElementById("transcript").innerHTML = "";
   await loadInvestigations();
   await refreshDetail();
@@ -138,38 +135,124 @@ async function sendPromptText(text) {
     } catch (e) { alert(e.message); return; }
   }
   addTurn("user", text);
-  document.getElementById("prompt-input").value = "";
-  autoGrow();
-  const thinking = addTurn("assistant", "…");
+  const loader = addLoader({ label: "Recherche" });
+  const signal = startBusy();
   try {
     const result = await api("/prompt", {
       method: "POST",
+      signal,
       body: JSON.stringify({ investigation_id: currentInvestigationId, prompt: text }),
     });
-    thinking.remove();
+    loader.finish("done");
     addToolTrace(result.tool_calls);
     addTurn("assistant", result.reply || "(pas de réponse)");
     await refreshDetail();
   } catch (e) {
-    thinking.innerHTML = `<span class="who">✻ ojd</span>\n<span class="err">Erreur : ${escapeHtml(e.message)}</span>`;
+    loader.finish("error", e);
+  } finally {
+    endBusy();
   }
 }
 
-// ---------- Composer ----------
+// ---------- Composer : PromptBar (React Bits) ----------
+// Le composant gère lui-même son texte ; on passe par le <textarea> qu'il
+// rend pour le pré-remplir (exemples, dictée) en simulant une saisie.
 
-const ta = document.getElementById("prompt-input");
-function autoGrow() { ta.style.height = "22px"; ta.style.height = Math.min(ta.scrollHeight, 160) + "px"; }
-ta.addEventListener("input", autoGrow);
-ta.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendPromptText(ta.value); }
+const COMMANDS = [
+  { key: "enquete", name: "/enquete", description: "Enquête complète automatique (tous les outils)" },
+  { key: "graphe", name: "/graphe", description: "Ouvrir le graphe des relations" },
+  { key: "resultats", name: "/resultats", description: "Afficher les entités trouvées" },
+  { key: "nouveau", name: "/nouveau", description: "Démarrer un nouveau chat" },
+];
+
+const ACCEPT_ICONS = { username: "user", email: "mail", domain: "globe", ip: "server", phone: "phone", url: "globe" };
+
+function promptEl() { return document.querySelector("#prompt-bar .prompt-bar__input"); }
+function focusPrompt() { promptEl()?.focus({ preventScroll: true }); }
+function setPrompt(text) {
+  const el = promptEl();
+  if (!el) return;
+  Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set.call(el, text);
+  el.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
+function handleSend(text) {
+  const m = /^\/(\w+)\s*(.*)$/s.exec(text);
+  switch (m && m[1].toLowerCase()) {
+    case "enquete": return runPlaybook(m[2]);
+    case "graphe": return openGraph();
+    case "resultats": return toggleDrawer();
+    case "nouveau": return newChat();
+    default: return sendPromptText(text);
+  }
+}
+
+let pending = null; // AbortController de la requête en cours
+const promptBar = ReactBits.mount("PromptBar", document.getElementById("prompt-bar"), {
+  placeholder: "Décris ta recherche…  (@ outil · / commande)",
+  sources: [],
+  commands: COMMANDS,
+  models: [],
+  efforts: [],
+  width: 4000,
+  onSend: (text) => handleSend(text),
+  onStop: () => pending?.abort(),
 });
-document.getElementById("send-btn").addEventListener("click", () => sendPromptText(ta.value));
+
+function startBusy() {
+  pending = new AbortController();
+  promptBar.update({ busy: true });
+  return pending.signal;
+}
+function endBusy() {
+  pending = null;
+  promptBar.update({ busy: false });
+}
+
+// Les modules OSINT deviennent les sources du menu « + » / « @ ».
+api("/modules").then((mods) => {
+  promptBar.update({
+    sources: mods.map((m) => ({
+      key: m.name,
+      name: m.name,
+      description: m.description.length > 46 ? m.description.slice(0, 45) + "…" : m.description,
+      icon: ACCEPT_ICONS[m.accepts[0]] || "tool",
+    })),
+  });
+}).catch(() => {});
+
+// ---------- Indicateur de travail : LatticeLoader (React Bits) ----------
+
+function addLoader({ label, pattern = "orbit", grid = 3 }) {
+  const t = document.getElementById("transcript");
+  const div = document.createElement("div");
+  div.className = "turn loader";
+  const host = document.createElement("span");
+  div.appendChild(host);
+  t.appendChild(div);
+  t.scrollTop = t.scrollHeight;
+  const ll = ReactBits.mount("LatticeLoader", host, {
+    label, pattern, grid, doneLabel: "Terminé en", errorLabel: "Échec après", fontSize: 13, color: "#a5d8ff",
+  });
+  return {
+    finish(status, err) {
+      const stopped = err && err.name === "AbortError";
+      ll.update({ status, errorLabel: stopped ? "Arrêté après" : "Échec après" });
+      if (err && !stopped) {
+        const e = document.createElement("div");
+        e.className = "err";
+        e.textContent = "Erreur : " + err.message;
+        div.appendChild(e);
+      }
+    },
+  };
+}
 
 // ---------- Enquête autonome (playbook) ----------
 
-async function runPlaybook() {
-  const seed = ta.value.trim();
-  if (!seed) { ta.focus(); return; }
+async function runPlaybook(seed) {
+  seed = (seed || "").trim();
+  if (!seed) { setPrompt("/enquete "); focusPrompt(); return; }
   if (!currentInvestigationId) {
     try {
       const inv = await api("/investigations", {
@@ -182,24 +265,24 @@ async function runPlaybook() {
     } catch (e) { alert(e.message); return; }
   }
   addTurn("user", "🔎 Enquête complète sur : " + seed);
-  ta.value = ""; autoGrow();
-  const thinking = addTurn("assistant", "Enquête autonome en cours — je lance tous les outils pertinents et je recoupe");
-  thinking.classList.add("thinking");
+  const loader = addLoader({ label: "Enquête autonome", pattern: "sweep", grid: 4 });
+  const signal = startBusy();
   try {
     const r = await api("/playbook", {
       method: "POST",
+      signal,
       body: JSON.stringify({ investigation_id: currentInvestigationId, seed_value: seed }),
     });
-    thinking.remove();
+    loader.finish("done");
     addToolTrace(r.tool_calls);
     addTurn("assistant", r.reply || "(pas de dossier)");
     await refreshDetail();
   } catch (e) {
-    thinking.classList.remove("thinking");
-    thinking.innerHTML = `<span class="who">✻ ojd</span>\n<span class="err">Erreur : ${escapeHtml(e.message)}</span>`;
+    loader.finish("error", e);
+  } finally {
+    endBusy();
   }
 }
-document.getElementById("pb-btn").addEventListener("click", runPlaybook);
 
 // ---------- Raccourcis clavier ----------
 
@@ -236,25 +319,48 @@ document.addEventListener("keydown", (e) => {
     case "g": e.preventDefault(); openGraph(); break;
     case ",": e.preventDefault(); openSettingsDialog(); break;
     case "?": e.preventDefault(); openHelp(); break;
-    case "/": e.preventDefault(); document.getElementById("prompt-input").focus(); break;
+    case "/": e.preventDefault(); focusPrompt(); break;
   }
 });
 
-// ---------- Voix (Web Speech API, local au navigateur) ----------
+// ---------- Voix : VoicePill (React Bits) + Web Speech API ----------
+// Appui court = démarrer/arrêter, appui long = parler tant qu'on maintient,
+// glisser à gauche = annuler. Le texte dicté est ajouté dans la barre.
 
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognizer = null, recording = false;
+let recognizer = null, voiceOn = false, voiceCancelled = false, heard = "";
 if (SR) {
   recognizer = new SR();
-  recognizer.lang = "fr-FR"; recognizer.interimResults = false; recognizer.maxAlternatives = 1;
-  recognizer.onresult = (ev) => { const tr = ev.results[0][0].transcript; ta.value = tr; sendPromptText(tr); };
-  recognizer.onend = () => { recording = false; document.getElementById("mic-btn").classList.remove("recording"); };
-  recognizer.onerror = () => { recording = false; document.getElementById("mic-btn").classList.remove("recording"); };
+  recognizer.lang = "fr-FR"; recognizer.continuous = true; recognizer.interimResults = false;
+  recognizer.onresult = (ev) => {
+    for (let i = ev.resultIndex; i < ev.results.length; i++) {
+      if (ev.results[i].isFinal) heard += (heard ? " " : "") + ev.results[i][0].transcript.trim();
+    }
+  };
+  recognizer.onend = () => {
+    if (voiceOn) { try { recognizer.start(); } catch {} return; } // coupure auto du navigateur
+    if (!voiceCancelled && heard) {
+      const cur = promptEl()?.value.trim() || "";
+      setPrompt(cur ? cur + " " + heard : heard);
+      focusPrompt();
+    }
+  };
 }
-document.getElementById("mic-btn").addEventListener("click", () => {
-  if (!recognizer) { alert("Reconnaissance vocale non supportée (essaie Chrome)."); return; }
-  if (recording) { recognizer.stop(); return; }
-  recording = true; document.getElementById("mic-btn").classList.add("recording"); recognizer.start();
+
+ReactBits.mount("VoicePill", document.getElementById("voice-pill"), {
+  reactive: "mic",
+  disabled: !SR,
+  ariaLabel: SR ? "Dicter (voix)" : "Dictée non supportée (essaie Chrome)",
+  onStart: () => {
+    voiceOn = true; voiceCancelled = false; heard = "";
+    try { recognizer.start(); } catch {}
+  },
+  onStop: ({ reason }) => {
+    voiceOn = false;
+    voiceCancelled = ["cancel", "escape", "mic-denied", "unmount", "disabled"].includes(reason);
+    if (voiceCancelled) recognizer.abort(); else recognizer.stop();
+    if (reason === "mic-denied") alert("Micro refusé : autorise l'accès au micro pour dicter.");
+  },
 });
 
 // ---------- Drawer (entités / audit) ----------

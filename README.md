@@ -46,6 +46,18 @@ backend/
     main.py               # API FastAPI + sert le frontend statique
 frontend/
   index.html / app.js     # UI vanilla JS : chat, micro (Web Speech API), entités, graphe SVG
+  GradientASCII.js/.css   # fond animé (React Bits, porté en JS vanilla)
+  vendor/reactbits.*      # bundle compilé de PromptBar, VoicePill, LatticeLoader
+reactbits/                # sources React Bits + script de build du bundle
+```
+
+### Composants React Bits (barre de saisie, micro, loader)
+
+L'UI reste sans étape de build : `frontend/vendor/reactbits.js` est déjà
+compilé et commité. Pour le régénérer après avoir modifié `reactbits/src/` :
+
+```bash
+cd reactbits && npm install && npm run build
 ```
 
 ## Ajouter un nouveau module OSINT
