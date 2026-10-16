@@ -1,0 +1,5 @@
+# Scripts Windows : fins de ligne CRLF quel que soit le système qui les récupère
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+# Scripts Linux : toujours LF
+*.sh text eol=lf

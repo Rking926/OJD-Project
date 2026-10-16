@@ -23,6 +23,30 @@ Raccourci sur le Bureau et dans le menu des applications (une seule fois) :
 Un double-clic sur « OJD OSINT » lance alors `start.sh` (Ollama + serveur)
 et ouvre l'interface.
 
+## Windows
+
+1. Récupérer le projet (PowerShell) — dans le dossier utilisateur plutôt que
+   sur un Bureau synchronisé par OneDrive (le `.venv` contient des milliers
+   de fichiers) :
+
+   ```powershell
+   winget install -e --id Git.Git     # si Git n'est pas installé
+   cd $HOME
+   git clone -b claude/compassionate-maxwell-aedxxk https://github.com/rking926/OJD-Project.git
+   ```
+
+2. Double-cliquer sur `install.bat` : installe Python 3.13 si besoin (winget),
+   crée le `.venv`, installe les dépendances et crée le raccourci
+   « OJD OSINT » sur le Bureau et dans le menu Démarrer.
+3. Double-cliquer sur le raccourci : `start.bat` lance Ollama (s'il est
+   installé) et le serveur dans une fenêtre réduite « OJD serveur » — la
+   fermer arrête l'app — puis ouvre l'interface.
+
+Python 3.12+ requis. Sous Windows, les connecteurs qui reposent sur des
+outils Kali (theHarvester, nmap, metasploit) sont indisponibles ; les autres
+fonctionnent. IA locale : `winget install -e --id Ollama.Ollama` puis
+`ollama pull llama3.1` (ou une clé API Anthropic dans ⚙️ Paramètres).
+
 ## Premiers pas
 
 1. Ouvrir ⚙️ **Paramètres** et renseigner une clé API Anthropic (ou passer
