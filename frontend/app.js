@@ -45,14 +45,16 @@ async function loadInvestigations() {
 async function renameInvestigation(id, title) {
   try {
     await api(`/investigations/${id}`, { method: "PUT", body: JSON.stringify({ title }) });
-  } catch (e) { alert(e.message); }
+    ReactBits.toast({ kind: "success", title: "Chat renommé", description: title });
+  } catch (e) { ReactBits.toast({ kind: "error", title: "Renommage impossible", description: e.message }); }
   loadInvestigations();
 }
 
 async function deleteInvestigation(id) {
   try {
     await api(`/investigations/${id}`, { method: "DELETE" });
-  } catch (e) { alert(e.message); }
+    ReactBits.toast({ kind: "success", title: "Chat supprimé" });
+  } catch (e) { ReactBits.toast({ kind: "error", title: "Suppression impossible", description: e.message }); }
   if (id === currentInvestigationId) newChat();
   else loadInvestigations();
 }
@@ -168,7 +170,7 @@ async function sendPromptText(text) {
       currentInvestigationId = inv.id;
       document.getElementById("transcript").innerHTML = "";
       loadInvestigations();
-    } catch (e) { alert(e.message); return; }
+    } catch (e) { ReactBits.toast({ kind: "error", title: "Impossible de créer le chat", description: e.message }); return; }
   }
   addTurn("user", text);
   const invId = currentInvestigationId;
@@ -300,7 +302,7 @@ async function runPlaybook(seed) {
       currentInvestigationId = inv.id;
       document.getElementById("transcript").innerHTML = "";
       loadInvestigations();
-    } catch (e) { alert(e.message); return; }
+    } catch (e) { ReactBits.toast({ kind: "error", title: "Impossible de créer le chat", description: e.message }); return; }
   }
   addTurn("user", "🔎 Enquête complète sur : " + seed);
   const invId = currentInvestigationId;
@@ -399,7 +401,7 @@ ReactBits.mount("VoicePill", document.getElementById("voice-pill"), {
     voiceOn = false;
     voiceCancelled = ["cancel", "escape", "mic-denied", "unmount", "disabled"].includes(reason);
     if (voiceCancelled) recognizer.abort(); else recognizer.stop();
-    if (reason === "mic-denied") alert("Micro refusé : autorise l'accès au micro pour dicter.");
+    if (reason === "mic-denied") ReactBits.toast({ kind: "error", title: "Micro refusé", description: "Autorise l'accès au micro pour dicter." });
   },
 });
 
@@ -604,10 +606,13 @@ async function saveSettings() {
   if (hibp) body.module_config.hibp_api_key = hibp;
   const ig = document.getElementById("cfg-ig-session").value.trim();
   if (ig) body.module_config.instagram_sessionid = ig;
+  const err = document.getElementById("cfg-error");
+  err.textContent = "";
   try {
     await api("/config", { method: "PUT", body: JSON.stringify(body) });
     document.getElementById("settings-dialog").close();
-  } catch (e) { alert(e.message); }
+    ReactBits.toast({ kind: "success", title: "Paramètres enregistrés" });
+  } catch (e) { err.textContent = e.message; } // la fenêtre est au-dessus des toasts
 }
 
 // ---------- Fond : GradientASCII (React Bits, voir GradientASCII.js) ----------

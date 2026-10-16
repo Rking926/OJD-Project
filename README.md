@@ -14,6 +14,15 @@ cd backend
 Puis ouvrir http://localhost:8000 dans Chrome (la reconnaissance vocale
 utilise l'API Web Speech, disponible nativement dans Chrome).
 
+Raccourci sur le Bureau et dans le menu des applications (une seule fois) :
+
+```bash
+./creer-raccourci.sh
+```
+
+Un double-clic sur « OJD OSINT » lance alors `start.sh` (Ollama + serveur)
+et ouvre l'interface.
+
 ## Premiers pas
 
 1. Ouvrir ⚙️ **Paramètres** et renseigner une clé API Anthropic (ou passer

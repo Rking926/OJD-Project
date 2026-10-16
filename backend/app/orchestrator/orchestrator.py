@@ -173,14 +173,19 @@ def _tools_schema() -> list[dict]:
         })
     return schema
 
-def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_config: dict) -> dict:
+def run_prompt(db: Session, investigation: Investigation, prompt: str, llm_config: dict,
+               history: list[dict] | None = None) -> dict:
     """Exécute un prompt utilisateur dans le contexte d'une investigation.
+
+    `history` : échanges précédents du chat ([{"role": "user"|"assistant",
+    "content": str}, ...], alternés, en commençant par "user") pour que le
+    modèle se souvienne de la conversation.
 
     Retourne {"reply": str, "new_entities": [...], "tool_calls": [...]}.
     """
     provider: LLMProvider = build_provider(llm_config)
     tools = _tools_schema()
-    messages = [{"role": "user", "content": prompt}]
+    messages = list(history or []) + [{"role": "user", "content": prompt}]
 
     new_entities: list[Entity] = []
     tool_call_log: list[dict] = []

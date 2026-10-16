@@ -73,4 +73,8 @@ ok "theharvester, recon_tool, metasploit : opérationnels si les binaires ci-des
 warn "hibp : optionnel — nécessite une clé API HIBP payante (xposedornot couvre les fuites gratuitement)"
 warn "toutatis : optionnel — nécessite TON sessionid Instagram (hors CGU, désactivé par défaut)"
 
-say "Terminé. Lance l'app avec :  ./start.sh"
+# 6. Raccourci Bureau + menu des applications ------------------------------
+say "Raccourci"
+"$PROJECT_DIR/creer-raccourci.sh" || warn "raccourci non créé (lance ./creer-raccourci.sh)"
+
+say "Terminé. Lance l'app avec le raccourci « OJD OSINT » ou :  ./start.sh"

@@ -32,5 +32,6 @@ if ! curl -s "localhost:$PORT/api/modules" >/dev/null 2>&1; then
   done
 fi
 
-# 3. Ouvre l'interface
-xdg-open "http://localhost:$PORT" >/dev/null 2>&1 &
+# 3. Ouvre l'interface (« ?ojd » : adresse jamais mise en cache par une
+#    ancienne version ; le serveur interdit ensuite le cache périmé)
+xdg-open "http://localhost:$PORT/?ojd" >/dev/null 2>&1 &

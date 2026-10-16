@@ -243,6 +243,38 @@ class PromptIn(BaseModel):
     prompt: str
 
 
+HISTORY_EXCHANGES = 6      # derniers échanges question/réponse envoyés au modèle
+HISTORY_REPLY_CHARS = 2000  # une réponse plus longue est tronquée (contexte limité, ex: Ollama)
+
+
+def _history(db, inv_id: str) -> list[dict]:
+    """Mémoire du chat : les derniers échanges complets (question puis réponse),
+    alternés user/assistant comme l'exigent les API. Les erreurs et les
+    questions restées sans réponse sont ignorées."""
+    rows = (db.query(Message).filter(Message.investigation_id == inv_id)
+            .order_by(Message.created_at).all())
+    pairs: list[tuple[str, str]] = []
+    question = None
+    for m in rows:
+        if m.role == "user":
+            question = m.content
+        elif m.role == "assistant" and question is not None:
+            reply = m.content or ""
+            if len(reply) > HISTORY_REPLY_CHARS:
+                reply = reply[:HISTORY_REPLY_CHARS] + " […]"
+            calls = ", ".join(f"{c.get('module')}({c.get('value')})" for c in (m.tool_calls or [])[:10])
+            if calls:
+                reply = f"[outils lancés : {calls}]\n{reply}"
+            pairs.append((question, reply))
+            question = None
+        else:
+            question = None
+    out: list[dict] = []
+    for q, r in pairs[-HISTORY_EXCHANGES:]:
+        out += [{"role": "user", "content": q}, {"role": "assistant", "content": r}]
+    return out
+
+
 def _run_and_record(db, inv_id: str, user_text: str, run) -> dict:
     """Enregistre le message, exécute `run()` et enregistre la réponse (ou l'erreur),
     pour pouvoir réafficher la conversation quand on la rouvre."""
@@ -274,7 +306,9 @@ def api_prompt(body: PromptIn):
         if not inv:
             raise HTTPException(404, "Investigation introuvable.")
         config = load_config()
-        return _run_and_record(db, inv.id, body.prompt, lambda: run_prompt(db, inv, body.prompt, config))
+        history = _history(db, inv.id)
+        return _run_and_record(db, inv.id, body.prompt,
+                               lambda: run_prompt(db, inv, body.prompt, config, history))
     finally:
         db.close()
 
