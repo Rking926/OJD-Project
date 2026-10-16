@@ -6,7 +6,8 @@
 <title>OJD OSINT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Geist+Mono:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="GradientASCII.css">
 <style>
   :root {
     --bg: #05080f; --bg2: rgba(10,16,28,.66); --panel: rgba(10,16,28,.92); --border: #1b2740;
@@ -19,7 +20,7 @@
   * { box-sizing: border-box; }
   body { margin:0; font-family: var(--ui); background: var(--bg); color: var(--text); font-size: 13px; line-height: 1.55; }
 
-  /* Fond : lueur bleu-vert + starfield + globe 3D (canvas), derrière l'app */
+  /* Fond : lueur bleu-vert + starfield + GradientASCII (React Bits, WebGL2), derrière l'app */
   .bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background:
       radial-gradient(1200px 560px at 50% 116%, rgba(46,230,166,.16), transparent 60%),
       radial-gradient(1200px 520px at 50% 122%, rgba(58,160,255,.20), transparent 62%),
@@ -33,7 +34,7 @@
       radial-gradient(1px 1px at 8% 58%, #fff, transparent), radial-gradient(1.4px 1.4px at 20% 70%, #fff, transparent),
       radial-gradient(1px 1px at 44% 62%, #bfeaff, transparent), radial-gradient(1px 1px at 58% 76%, #fff, transparent),
       radial-gradient(1px 1px at 76% 64%, #fff, transparent), radial-gradient(1px 1px at 88% 80%, #cfe4ff, transparent); }
-  #globe { position: fixed; inset: 0; width:100%; height:100%; z-index:-1; display:block; pointer-events:none; }
+  #ascii-bg { position: fixed; inset: 0; width:100%; height:100%; z-index:-1; pointer-events:none; }
 
   .glass { background: var(--bg2); backdrop-filter: blur(12px) saturate(1.2); -webkit-backdrop-filter: blur(12px) saturate(1.2); }
   ::selection { background: rgba(46,230,166,.32); }
@@ -136,7 +137,7 @@
 </head>
 <body>
 <div class="bg"></div>
-<canvas id="globe" aria-hidden="true"></canvas>
+<div id="ascii-bg" aria-hidden="true"></div>
 <div class="layout">
   <div class="sidebar">
     <div class="brand"><span class="star">✻</span> OJD OSINT</div>
@@ -262,6 +263,7 @@
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.2/cytoscape.min.js"></script>
+<script src="GradientASCII.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

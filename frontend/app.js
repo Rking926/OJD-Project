@@ -464,69 +464,17 @@ async function saveSettings() {
   } catch (e) { alert(e.message); }
 }
 
-// ---------- Fond ASCII dégradé (canvas vanilla, aucune dépendance) ----------
-// Effet "horizon" : caractères ASCII dessinés en dégradé bleu, animés et
-// réactifs à la souris. Config inspirée de GradientASCII (colors/characters).
+// ---------- Fond : GradientASCII (React Bits, voir GradientASCII.js) ----------
 (function () {
-  const cvs = document.getElementById("globe");
-  if (!cvs) return;
-  const ctx = cvs.getContext("2d");
-  const COLORS = [[30, 63, 216], [246, 248, 255], [165, 216, 255], [56, 189, 248]];
-  const CHARS = " =+xX0S8#@";
-  const CELL = 13, DENSITY = 0.85;
-  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let W, H, DPR, cols, rows;
-  let mx = 0.5, my = 0.5;
-
-  function resize() {
-    DPR = Math.min(1.5, window.devicePixelRatio || 1);
-    W = cvs.width = Math.floor(innerWidth * DPR);
-    H = cvs.height = Math.floor(innerHeight * DPR);
-    cols = Math.ceil(innerWidth / CELL);
-    rows = Math.ceil(innerHeight / CELL);
-    ctx.font = `${Math.round((CELL + 1) * DPR)}px "DejaVu Sans Mono", ui-monospace, monospace`;
-    ctx.textBaseline = "top";
-  }
-  resize();
-  window.addEventListener("resize", resize);
-  window.addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth; my = e.clientY / innerHeight; });
-
-  function colorAt(t) {
-    t = Math.max(0, Math.min(0.999, t));
-    const n = COLORS.length - 1, f = t * n, i = Math.floor(f), k = f - i;
-    const a = COLORS[i], b = COLORS[i + 1];
-    return `rgb(${(a[0] + (b[0] - a[0]) * k) | 0},${(a[1] + (b[1] - a[1]) * k) | 0},${(a[2] + (b[2] - a[2]) * k) | 0})`;
-  }
-
-  let last = 0;
-  function frame(time) {
-    if (time - last < 32) { requestAnimationFrame(frame); return; } // ~30 fps
-    last = time;
-    ctx.clearRect(0, 0, W, H);
-    const t = reduce ? 0 : time * 0.0004;
-    const stepX = CELL * DPR, stepY = CELL * DPR;
-    for (let gy = 0; gy < rows; gy++) {
-      const ny = gy / rows;
-      const horizon = 1 - Math.min(1, Math.abs(ny - 0.58) / 0.5); // bande lumineuse
-      for (let gx = 0; gx < cols; gx++) {
-        const nx = gx / cols;
-        const flow = 0.5 + 0.5 * Math.sin(nx * 6 + t * 2 + Math.sin(ny * 5 - t)) * Math.cos(ny * 7 - t * 1.3);
-        const mdist = Math.hypot(nx - mx, (ny - my) * 1.2);
-        const mouse = Math.max(0, 0.35 - mdist) * 1.6; // halo sous le curseur
-        let v = horizon * 0.72 + flow * 0.5 * DENSITY + mouse;
-        v = Math.max(0, Math.min(1, v));
-        const ci = Math.floor(v * (CHARS.length - 1) + 0.0001);
-        const ch = CHARS[ci];
-        if (ch === " ") continue;
-        ctx.globalAlpha = 0.18 + v * 0.55;
-        ctx.fillStyle = colorAt(v);
-        ctx.fillText(ch, gx * stepX, gy * stepY);
-      }
-    }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
+  const el = document.getElementById("ascii-bg");
+  if (!el || !window.GradientASCII) return;
+  GradientASCII.mount(el, {
+    colors: ["#1e3fd8", "#f6f8ff", "#a5d8ff", "#38bdf8"],
+    shape: "horizon",
+    characters: " =+xX0S8#@",
+    cellSize: 18,
+    density: 0.8,
+  });
 })();
 
 // ---------- Init ----------
