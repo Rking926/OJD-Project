@@ -97,14 +97,33 @@ async function selectInvestigation(id) {
   currentInvestigationId = id;
   focusPrompt();
   document.getElementById("transcript").innerHTML = "";
-  await loadInvestigations();
-  await refreshDetail();
+  loadInvestigations();
+  const d = await api(`/investigations/${id}`);
+  if (id !== currentInvestigationId) return; // on a changé de chat entre-temps
+  renderHistory(d.messages || []);
+  renderEntities(d.entities);
 }
 
 async function refreshDetail() {
   if (!currentInvestigationId) return;
   const d = await api(`/investigations/${currentInvestigationId}`);
   renderEntities(d.entities);
+}
+
+// Réaffiche les messages enregistrés d'une conversation.
+function renderHistory(messages) {
+  if (!messages.length) {
+    addTurn("assistant", "(aucun message enregistré pour ce chat — les anciens chats n'avaient pas d'historique)");
+    return;
+  }
+  for (const m of messages) {
+    if (m.role === "user") { addTurn("user", m.content); continue; }
+    const loader = addLoader({ label: "Recherche", elapsed: (m.duration_ms ?? 0) / 1000 });
+    if (m.role === "error") { loader.finish("error", new Error(m.content)); continue; }
+    loader.finish("done");
+    addToolTrace(m.tool_calls);
+    addTurn("assistant", m.content || "(pas de réponse)");
+  }
 }
 
 // ---------- Transcript ----------
@@ -152,14 +171,16 @@ async function sendPromptText(text) {
     } catch (e) { alert(e.message); return; }
   }
   addTurn("user", text);
+  const invId = currentInvestigationId;
   const loader = addLoader({ label: "Recherche" });
   const signal = startBusy();
   try {
     const result = await api("/prompt", {
       method: "POST",
       signal,
-      body: JSON.stringify({ investigation_id: currentInvestigationId, prompt: text }),
+      body: JSON.stringify({ investigation_id: invId, prompt: text }),
     });
+    if (invId !== currentInvestigationId) return; // réponse enregistrée, visible en rouvrant le chat
     loader.finish("done");
     addToolTrace(result.tool_calls);
     addTurn("assistant", result.reply || "(pas de réponse)");
@@ -240,7 +261,7 @@ api("/modules").then((mods) => {
 
 // ---------- Indicateur de travail : LatticeLoader (React Bits) ----------
 
-function addLoader({ label, pattern = "orbit", grid = 3 }) {
+function addLoader({ label, pattern = "orbit", grid = 3, elapsed }) {
   const t = document.getElementById("transcript");
   const div = document.createElement("div");
   div.className = "turn loader";
@@ -249,7 +270,7 @@ function addLoader({ label, pattern = "orbit", grid = 3 }) {
   t.appendChild(div);
   t.scrollTop = t.scrollHeight;
   const ll = ReactBits.mount("LatticeLoader", host, {
-    label, pattern, grid, doneLabel: "Terminé en", errorLabel: "Échec après", fontSize: 13, color: "#a5d8ff",
+    label, pattern, grid, elapsed, doneLabel: "Terminé en", errorLabel: "Échec après", fontSize: 13, color: "#a5d8ff",
   });
   return {
     finish(status, err) {
@@ -282,14 +303,16 @@ async function runPlaybook(seed) {
     } catch (e) { alert(e.message); return; }
   }
   addTurn("user", "🔎 Enquête complète sur : " + seed);
+  const invId = currentInvestigationId;
   const loader = addLoader({ label: "Enquête autonome", pattern: "sweep", grid: 4 });
   const signal = startBusy();
   try {
     const r = await api("/playbook", {
       method: "POST",
       signal,
-      body: JSON.stringify({ investigation_id: currentInvestigationId, seed_value: seed }),
+      body: JSON.stringify({ investigation_id: invId, seed_value: seed }),
     });
+    if (invId !== currentInvestigationId) return; // réponse enregistrée, visible en rouvrant le chat
     loader.finish("done");
     addToolTrace(r.tool_calls);
     addTurn("assistant", r.reply || "(pas de dossier)");

@@ -49,6 +49,7 @@ class Investigation(Base):
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, default=dt.datetime.utcnow)
 
     entities: Mapped[list["Entity"]] = relationship(back_populates="investigation", cascade="all, delete-orphan")
+    messages: Mapped[list["Message"]] = relationship(cascade="all, delete-orphan")
 
 
 class Entity(Base):
@@ -76,6 +77,24 @@ class Relation(Base):
     from_entity_id: Mapped[str] = mapped_column(ForeignKey("entities.id"))
     to_entity_id: Mapped[str] = mapped_column(ForeignKey("entities.id"))
     label: Mapped[str] = mapped_column(String)  # ex: "profil_trouve", "lie_a"
+    created_at: Mapped[dt.datetime] = mapped_column(DateTime, default=dt.datetime.utcnow)
+
+
+class Message(Base):
+    """Un message du chat, pour réafficher la conversation quand on la rouvre.
+
+    role : "user", "assistant" ou "error". tool_calls reprend la trace des
+    outils lancés ; duration_ms le temps de traitement côté serveur.
+    """
+
+    __tablename__ = "messages"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=new_id)
+    investigation_id: Mapped[str] = mapped_column(ForeignKey("investigations.id"), index=True)
+    role: Mapped[str] = mapped_column(String)
+    content: Mapped[str] = mapped_column(Text)
+    tool_calls: Mapped[list] = mapped_column(JSON, default=list)
+    duration_ms: Mapped[int | None] = mapped_column(default=None)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime, default=dt.datetime.utcnow)
 
 

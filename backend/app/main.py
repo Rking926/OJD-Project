@@ -7,6 +7,7 @@ Sert aussi la petite UI statique (frontend/) pour le MVP.
 """
 from __future__ import annotations
 
+import time
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -15,7 +16,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .config_store import load_config, public_config, save_config
-from .models import Entity, Investigation, Relation, SessionLocal, init_db
+from .models import Entity, Investigation, Message, Relation, SessionLocal, init_db
 from .modules.registry import manifests
 from .orchestrator.orchestrator import run_prompt
 
@@ -182,7 +183,7 @@ def api_delete_investigation(inv_id: str):
             raise HTTPException(404, "Chat introuvable.")
         # Les relations pointent vers les entités : on les supprime d'abord.
         db.query(Relation).filter(Relation.investigation_id == inv_id).delete()
-        db.delete(inv)  # les entités suivent (cascade delete-orphan)
+        db.delete(inv)  # entités et messages suivent (cascade delete-orphan)
         db.commit()
         return {"deleted": inv_id}
     finally:
@@ -224,6 +225,12 @@ def api_get_investigation(inv_id: str):
                 {"id": r.id, "from": r.from_entity_id, "to": r.to_entity_id, "label": r.label}
                 for r in relations
             ],
+            "messages": [
+                {"role": m.role, "content": m.content, "tool_calls": m.tool_calls or [],
+                 "duration_ms": m.duration_ms, "created_at": str(m.created_at)}
+                for m in db.query(Message).filter(Message.investigation_id == inv_id)
+                .order_by(Message.created_at).all()
+            ],
         }
     finally:
         db.close()
@@ -236,6 +243,29 @@ class PromptIn(BaseModel):
     prompt: str
 
 
+def _run_and_record(db, inv_id: str, user_text: str, run) -> dict:
+    """Enregistre le message, exécute `run()` et enregistre la réponse (ou l'erreur),
+    pour pouvoir réafficher la conversation quand on la rouvre."""
+    db.add(Message(investigation_id=inv_id, role="user", content=user_text))
+    db.commit()
+    started = time.monotonic()
+    try:
+        result = run()
+    except Exception as exc:
+        db.rollback()
+        db.add(Message(investigation_id=inv_id, role="error", content=str(exc),
+                       duration_ms=int((time.monotonic() - started) * 1000)))
+        db.commit()
+        if isinstance(exc, ValueError):
+            raise HTTPException(400, str(exc))
+        raise
+    db.add(Message(investigation_id=inv_id, role="assistant", content=result.get("reply") or "",
+                   tool_calls=result.get("tool_calls") or [],
+                   duration_ms=int((time.monotonic() - started) * 1000)))
+    db.commit()
+    return result
+
+
 @app.post("/api/prompt")
 def api_prompt(body: PromptIn):
     db = SessionLocal()
@@ -244,11 +274,7 @@ def api_prompt(body: PromptIn):
         if not inv:
             raise HTTPException(404, "Investigation introuvable.")
         config = load_config()
-        try:
-            result = run_prompt(db, inv, body.prompt, config)
-        except ValueError as exc:
-            raise HTTPException(400, str(exc))
-        return result
+        return _run_and_record(db, inv.id, body.prompt, lambda: run_prompt(db, inv, body.prompt, config))
     finally:
         db.close()
 
@@ -270,10 +296,10 @@ def api_playbook(body: PlaybookIn):
         if not inv:
             raise HTTPException(404, "Investigation introuvable.")
         config = load_config()
-        try:
-            return run_full_investigation(db, inv, body.seed_value, body.seed_type, config)
-        except ValueError as exc:
-            raise HTTPException(400, str(exc))
+        return _run_and_record(
+            db, inv.id, f"🔎 Enquête complète sur : {body.seed_value}",
+            lambda: run_full_investigation(db, inv, body.seed_value, body.seed_type, config),
+        )
     finally:
         db.close()
 
