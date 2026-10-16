@@ -173,6 +173,22 @@ def api_rename_investigation(inv_id: str, body: RenameIn):
         db.close()
 
 
+@app.delete("/api/investigations/{inv_id}")
+def api_delete_investigation(inv_id: str):
+    db = SessionLocal()
+    try:
+        inv = db.get(Investigation, inv_id)
+        if not inv:
+            raise HTTPException(404, "Chat introuvable.")
+        # Les relations pointent vers les entités : on les supprime d'abord.
+        db.query(Relation).filter(Relation.investigation_id == inv_id).delete()
+        db.delete(inv)  # les entités suivent (cascade delete-orphan)
+        db.commit()
+        return {"deleted": inv_id}
+    finally:
+        db.close()
+
+
 @app.get("/api/investigations")
 def api_list_investigations():
     db = SessionLocal()

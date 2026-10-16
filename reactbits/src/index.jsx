@@ -1,6 +1,7 @@
 // Point d'entrée du bundle : expose les composants React Bits à l'UI vanilla
-// (frontend/app.js) via window.ReactBits. Les composants eux-mêmes sont
-// copiés tels quels depuis le registre React Bits (variante JS-CSS).
+// (frontend/app.js) via window.ReactBits. PromptBar, VoicePill, LatticeLoader et
+// SwipeRow sont copiés tels quels depuis le registre React Bits (variante JS-CSS) ;
+// ConversationList est propre à OJD et s'appuie sur SwipeRow.
 import { createRoot } from 'react-dom/client';
 import {
   Brain02Icon,
@@ -21,8 +22,10 @@ import {
 import PromptBar from './PromptBar';
 import VoicePill from './VoicePill';
 import LatticeLoader from './LatticeLoader';
+import SwipeRow from './SwipeRow';
+import ConversationList from './ConversationList';
 
-const COMPONENTS = { PromptBar, VoicePill, LatticeLoader };
+const COMPONENTS = { PromptBar, VoicePill, LatticeLoader, SwipeRow, ConversationList };
 
 // Icônes utilisables par nom depuis le JS vanilla (ex: sources de PromptBar).
 const ICONS = {

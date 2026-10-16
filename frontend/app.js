@@ -26,18 +26,35 @@ async function loadStats() {
 
 // ---------- Investigations ----------
 
+// Liste en lignes SwipeRow (React Bits) : clic = ouvrir, glisser à gauche =
+// Renommer / Supprimer (voir reactbits/src/ConversationList.jsx).
+let convList = null;
 async function loadInvestigations() {
-  const list = document.getElementById("investigation-list");
   const items = await api("/investigations");
-  list.innerHTML = items.length ? "" : '<div class="dim" style="font-size:11px">aucune enquête</div>';
-  for (const inv of items) {
-    const div = document.createElement("div");
-    div.className = "inv-item" + (inv.id === currentInvestigationId ? " active" : "");
-    div.textContent = inv.title;
-    div.title = inv.reason;
-    div.onclick = () => selectInvestigation(inv.id);
-    list.appendChild(div);
-  }
+  const props = {
+    items,
+    activeId: currentInvestigationId,
+    onSelect: (id) => selectInvestigation(id),
+    onRename: (id, title) => renameInvestigation(id, title),
+    onDelete: (id) => deleteInvestigation(id),
+  };
+  if (convList) convList.update(props);
+  else convList = ReactBits.mount("ConversationList", document.getElementById("investigation-list"), props);
+}
+
+async function renameInvestigation(id, title) {
+  try {
+    await api(`/investigations/${id}`, { method: "PUT", body: JSON.stringify({ title }) });
+  } catch (e) { alert(e.message); }
+  loadInvestigations();
+}
+
+async function deleteInvestigation(id) {
+  try {
+    await api(`/investigations/${id}`, { method: "DELETE" });
+  } catch (e) { alert(e.message); }
+  if (id === currentInvestigationId) newChat();
+  else loadInvestigations();
 }
 
 const EXAMPLES = [
