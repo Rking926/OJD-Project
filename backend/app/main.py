@@ -29,6 +29,16 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def _no_stale_frontend(request, call_next):
+    # Le navigateur revalide l'UI à chaque chargement (ETag) : une mise à jour
+    # du frontend s'affiche tout de suite au lieu d'une vieille copie en cache.
+    response = await call_next(request)
+    if not request.url.path.startswith("/api"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
 @app.on_event("startup")
 def _startup() -> None:
     init_db()
